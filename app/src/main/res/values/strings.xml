@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Politics Game</string>
+    <string name="start">Start</string>
+    <string name="play">Play</string>
+    <string name="info">Info</string>
+    <string name="help">Help</string>
+    <string name="game_title">Game Title</string>
+    <string name="title_activity_setup">SetupActivity</string>
+    <string name="aiToggle">Debug: AI Toggle</string>
+    <string name="countryName">Country Name</string>
+    <string name="economic">Economically:</string>
+    <string name="social">Socially:</string>
+    <string name="government_type">Government Type</string>
+    <string name="gameplay_help">Gameplay Help</string>
+    <string name="gameplay_description1">Gameplay Description And tutorial goes here.</string>
+    <string name="gameplay_description2">More Text.</string>
+    <string name="project_information">Project Description Goes Here.</string>
+
+    <!-- Arrays for Government Type Spinners -->
+    <string-array name="govtHoriz">
+        <item>Collectivist</item>
+        <item>Centrist</item>
+        <item>Individualist</item>
+    </string-array>
+
+    <string-array name="govtVert">
+        <item>Authoritarian</item>
+        <item>Moderate</item>
+        <item>Libertarian</item>
+    </string-array>
+
+</resources>
