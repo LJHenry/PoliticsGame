@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class EventPool {
 
-    ArrayList<Event> poolA;
-    ArrayList<Event> poolB;
+    private ArrayList<Event> poolA;
+    private ArrayList<Event> poolB;
 
     public EventPool(){
         poolA = new ArrayList< >();

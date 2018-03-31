@@ -37,7 +37,8 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
         spinnerVert = findViewById(R.id.spinnerVertical);
         start = findViewById(R.id.buttonStart);
         bonuses = new int[3];
-        type = 5;
+
+        type = 1;
 
         //Spinner 1 Adapter
         ArrayAdapter<CharSequence> horizAdapter = ArrayAdapter.createFromResource(this, R.array.govtHoriz, android.R.layout.simple_spinner_item);
@@ -53,6 +54,8 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
         spinnerVert.setOnItemSelectedListener(this);
         start.setOnClickListener(this);
 
+        spinnerHoriz.setSelection(1);
+        spinnerVert.setSelection(1);
         //Provide description based on spinner selected item
         describe(spinnerHoriz, spinnerVert);
     }
@@ -122,7 +125,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Centrist") && vert.equals("Authoritarian")) {
             t.setText("A government that does not fall particularly to the left or right economically but employs authoritarian social policy. It is rare that such a government will exist however Singapore's governance is an example of this. While the country has an excellent economy, civil liberties are reduced.");
-            bonuses[0] = -1; bonuses[1] = 0; bonuses[2] = 2; type = 2;
+            bonuses[0] = -1; bonuses[1] = 0; bonuses[2] = 1; type = 2;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Centrist") && vert.equals("Libertarian")) {
             t.setText("A common socially liberal centrist government. In the UK the Liberal Democrats ideology occupies this area of the spectrum, with their cohorts of 'social liberals' and 'Orange Bookers' the party tends not to sway too far left or right.");
@@ -150,7 +153,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Individualist") && vert.equals("Libertarian")) {
             t.setText("Classic liberalism. Holding the belief that the rights of the individual are tantamount to freedom. Maintains the Non-Aggression Principle which dictates that any force exerted on an individual (i.e. the state) to do something is coercion which directly violates freedom. For this reason, economically individualist ideas are preferred as collectivism is seen as a violation of the NAP. As of yet there are no examples of a government that has truly utilised this, likely owing to the nature of its ideals.");
-            bonuses[0] = 1; bonuses[1] = 1; bonuses[2] = -1; type = 9;
+            bonuses[0] = 1; bonuses[1] = 1; bonuses[2] = -2; type = 9;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else {
             //Error - Shouldn't be possible to reach this

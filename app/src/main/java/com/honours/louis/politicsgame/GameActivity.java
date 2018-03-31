@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity {
     //Set necessary parameters before game start, takes bonuses as argument
     private void setup(int[] bonuses){
         //Set date
-        day = 1; dayTotal = 1; month = 1; year = 1;
+        day = 1; dayTotal = 180; month = 6; year = 4;
 
         //Determine bonuses from government type
         appBonus = bonuses[0];
@@ -302,7 +302,6 @@ public class GameActivity extends AppCompatActivity {
         if (dayTotal == 280 && year == 4) {
             election = true;
         } else if (dayTotal == 359 && year == 4){
-            election = false;
             gameOver = true;
         }
 
@@ -347,7 +346,7 @@ public class GameActivity extends AppCompatActivity {
             //Normal Event
             if(!flag){
                 //Training Event
-                e = eventSystem.getTrainingEvent();
+                e = eventSystem.t.getTrainingEvent();
 
                 //Random premade event
                 //e = eventSystem.getPremadeEvent("None", true);
@@ -358,7 +357,6 @@ public class GameActivity extends AppCompatActivity {
                 //Feed game state
             }
         } else {
-
             //Get Premade Event Using Name, Override Event lock
             e = eventSystem.getPremadeEvent(name, false);
             eventName = null;
@@ -393,6 +391,7 @@ public class GameActivity extends AppCompatActivity {
             return true;
         } else if (dayTotal == 340 && year == 4){
             eventName = "ElectionClose";
+            election = false;
             return true;
         }
         return false;

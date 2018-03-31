@@ -58,6 +58,22 @@
         android:id="@+id/textGovHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="368dp"
+        android:text="Bonuses:"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textViewH"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textGovHeading2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="120dp"
         android:text="@string/government_type"
@@ -71,26 +87,26 @@
         android:id="@+id/textBonusApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
+        android:layout_marginBottom="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="32dp"
         android:text="TextView"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textBonusBudg"
+        app:layout_constraintHorizontal_bias="0.447"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textBonusBudg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
+        android:layout_marginBottom="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@android:color/holo_green_dark"
@@ -98,24 +114,23 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textBonusStab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
+        android:layout_marginBottom="68dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
         android:text="TextView"
-        android:textAlignment="center"
+        android:textAlignment="textEnd"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.631"
         app:layout_constraintStart_toEndOf="@+id/textBonusBudg" />
 
     <TextView
@@ -125,14 +140,11 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:text="Happiness"
+        android:text="Approval"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/textBonusApp"
         app:layout_constraintEnd_toStartOf="@+id/textViewC"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewC"
@@ -141,14 +153,11 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Budget"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/textBonusBudg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewS"
@@ -157,29 +166,25 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Stability"
         android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textBonusStab"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewC"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintStart_toEndOf="@+id/textViewC" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="280dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="256dp"
+        app:layout_constraintBottom_toTopOf="@+id/textGovHeading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
