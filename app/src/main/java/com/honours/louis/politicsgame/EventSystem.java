@@ -161,8 +161,8 @@ public class EventSystem {
         //Higher score = worse situation
         //Closer to election score is naturally higher
 
-        String label = "Default";
-        int score;
+        String label = "Critical"; //Only stays as this if score is over 40 = critical
+        int score = 0;
 
         score = calculateScore();
 
@@ -233,7 +233,7 @@ public class EventSystem {
             //Add a percentage of the score depending on the last events label
             switch (lastEventSituation) {
                 case "Low":
-                    score += (score / 100 * 1);
+                    score += (score / 100);
                     break;
                 case "Moderate":
                     score += (score / 100 * 4);
