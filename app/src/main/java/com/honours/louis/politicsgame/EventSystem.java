@@ -12,6 +12,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,7 +37,6 @@ public class EventSystem {
     private EventPool pool;
     //Log File
     private String logFilename; //Will use devices Android id - unique and recommended secure ID method by Google
-    private String logFilePath;
     private FileOutputStream outputStream;
     private Context c;
 
@@ -71,8 +71,6 @@ public class EventSystem {
             }
             outputStream.write(state.getBytes());
             outputStream.close();
-            Toast toast = Toast.makeText(c, "Written to Log", Toast.LENGTH_SHORT);
-            toast.show();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,23 +207,23 @@ public class EventSystem {
 
         //Approval
         if (approval < 30) {
-            score += 15;
+            score += 20;
         } else if (approval < 40) {
-            score += 5;
+            score += 10;
         }
 
         //Budget
         if (budget < 25000) {
-            score += 15;
+            score += 20;
         } else if (budget < 35000) {
-            score += 5;
+            score += 10;
         }
 
         //Stability
         if (stability < 1.5) {
-            score += 15;
+            score += 20;
         } else if (stability < 2) {
-            score += 5;
+            score += 10;
         }
 
         if (lastEventSituation != null) {
@@ -278,9 +276,12 @@ public class EventSystem {
 
     private double[] getEffects(int choice) {
         double[] effects = new double[3];
-        effects[0] = getRandomValue("approval", choice);
-        effects[1] = getRandomValue("budget", choice);
-        effects[2] = getRandomValue("stability", choice);
+        effects[0] = Math.round(getRandomValue("approval", choice));
+        effects[1] = Math.round(getRandomValue("budget", choice));
+        //Round stability
+        DecimalFormat df = new DecimalFormat("#.#");
+        String s = df.format(getRandomValue("stability", choice));
+        effects[2] = Double.parseDouble(s);
 
         return effects;
     }

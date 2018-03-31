@@ -1,7 +1,6 @@
 package com.honours.louis.politicsgame;
 
 import android.app.AlertDialog;
-import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -23,18 +22,18 @@ public class GameActivity extends AppCompatActivity {
     private boolean paused;
 
     //TextViews
-    TextView dateText;
-    
-    TextView appText;
-    TextView budText;
-    TextView stabText;
-    
-    TextView appEffect;
-    TextView budEffect;
-    TextView stabEffect;
-    
-    TextView eventText;
-    TextView choiceText;
+    private TextView dateText;
+
+    private TextView appText;
+    private TextView budText;
+    private TextView stabText;
+
+    private TextView appEffect;
+    private TextView budEffect;
+    private TextView stabEffect;
+
+    private TextView eventText;
+    private TextView choiceText;
 
     //Progress bar for in game date
     private ProgressBar dateBar;
@@ -137,8 +136,8 @@ public class GameActivity extends AppCompatActivity {
 
     //Game loop
     private void gameLoop() {
-        //Begin game loop with timer, Current: 1 day = 0.2 sec
-        new CountDownTimer(86400000, 200) {
+        //Begin game loop with timer, Current: 1 day = 0.1 sec
+        new CountDownTimer(86400000, 100) {
             //Per Tick - 1 year = 360 days = 1800 ticks
             public void onTick(long millisUntilFinished) {
                 //Check if paused
@@ -211,16 +210,30 @@ public class GameActivity extends AppCompatActivity {
 
     //Change resources
     private void changeResources(double[] effects){
-        //Apply bonuses to changes
+        //If no election
+        if(!election) {
+            //Spread changes out over 30 ticks
+            appChange = effects[0] / 30;
+            budChange = effects[1] / 30;
+            stabChange = effects[2] / 30;
+            bonuses();
+
+            changes = true;
+        } else if (election){
+            //Change resources absolutely
+            appChange = effects[0];
+            budChange = effects[1];
+            stabChange = effects[2];
+            bonuses();
+            resourceChunk();
+        }
+    }
+
+    //Apply bonuses
+    private void bonuses(){
         appChange += ((appChange/100) * appBonus);
         budChange += ((budChange/100) * budBonus);
         stabChange += ((stabChange/100) * stabBonus);
-        //Spread changes out over 20 ticks
-        appChange = effects[0] / 20;
-        budChange = effects[1] / 20;
-        stabChange = effects[2] / 20;
-
-        changes = true;
     }
 
     //Change resources per tick, if one reaches 0 game over
@@ -254,6 +267,35 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    //Change resources at once, check for 0
+    private void resourceChunk(){
+        approval += appChange;
+        if (approval > 100) {
+            approval = 100;
+        }
+        if (approval < 0) {
+            approval = 0;
+            gameOver = true;
+        }
+
+        //Budget - Don't go below 0
+        budget += budChange;
+        if (budget < 0) {
+            budget = 0;
+            gameOver = true;
+        }
+
+        //Stability - Don't go over 5, under 0
+        stability += stabChange;
+        if (stability > 5) {
+            stability = 5;
+        }
+        if (stability < 0) {
+            stability = 0;
+            gameOver = true;
+        }
+    }
+
     //Check for events
     private boolean eventCheck(){
         //Start of Election Events
@@ -273,9 +315,9 @@ public class GameActivity extends AppCompatActivity {
             }
         } else if (eventLock){
             eventCounter++;
-            //20 ticks after last event - then % chance to happen every tick
-            if(eventCounter >= 20) {
-                //After 20 ticks turn event lock and resource changes off
+            //30 ticks after last event - then % chance to happen every tick
+            if(eventCounter >= 30) {
+                //After 30 ticks turn event lock and resource changes off
                 eventLock = false;
                 changes = false;
                 eventCounter = 0;
@@ -283,8 +325,8 @@ public class GameActivity extends AppCompatActivity {
                 eventCheck();
             }
         } else {
-            //Event - 1/10 chance of happening
-            if(new Random().nextInt(10)==0){
+            //Event - 1/25 chance of happening
+            if(new Random().nextInt(25)==0){
                 //Apply event lock
                 eventLock = true;
                 return true;
@@ -570,18 +612,9 @@ public class GameActivity extends AppCompatActivity {
 
 
     //TODO
-    //Record historical game data
-        //Make a log
-        //Get logs to feed AI trainer
-    //Configure concrete events - elections
-        //Add more random events
+    //Add more random events
 
     //Lose game activity
     //Loss conditions
-    //Questionnaire + Data export
-
-    //onPause?
-        //Keep variables
-    //onResume?
-        //Restore variables
+    //Questionnaire
 }

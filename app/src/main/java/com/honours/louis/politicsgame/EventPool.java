@@ -18,8 +18,8 @@ public class EventPool {
     ArrayList<Event> poolB;
 
     public EventPool(){
-        poolA = new ArrayList();
-        poolB = new ArrayList();
+        poolA = new ArrayList< >();
+        poolB = new ArrayList< >();
 
         fillPoolA();
         fillPoolB();
@@ -63,13 +63,13 @@ public class EventPool {
         poolA.add(makeEvent("Example", "Events", "You Must", 0, 0, 0, "Appear", "Make", 0, 0, 0, "Here", "A Choice",0,0, 0 ));
         poolA.add(makeEvent("Resources", "Balance", "Approval", 0, 0, 0, "Your", "Budget", 0, 0, 0, "Resources", "Stability",0,0, 0 ));
         //Election
-        poolA.add(makeEvent("ElectionWarning", "General Election", "Make Party Speech", 5, 0, 0, "To Be Held", "Strategize Campaign", 0, 0, 0.8, "Soon", "Raise Funds",0,150000, 0 ));
-        poolA.add(makeEvent("BeginCampaign", "Government", "Focus on People", 4, -75000, 0, "Begins", "Focus on Economy", 3, -100000, 0.3, "Election Campaign", "Focus on Party Issues",0,-125000, 0.8 ));
-        poolA.add(makeEvent("OppositionCampaign", "Opposition", "Criticise Policies", 2, 0, -0.2, "Begins", "Release Sound Bites", 1, -20000, 0.2, "Election Campaign", "Counter Campaign",3,-50000, 0.4 ));
-        poolA.add(makeEvent("ElectionProgress", "Election Campaigns", "Ease Funding", 0, -10000, 0, "Make Progress", "Continue Funding", 1, -25000, 0.2, "Around the Country", "Increase Funding",4,-35000, 0.5 ));
-        poolA.add(makeEvent("ElectionTwist", "Opposition", "Ignore Them", -6, 0, 0.6, "Targets", "Change Focus Areas", -3, -20000, 0.3, "Government Weaknesses", "Aggressive Campaigning",5,-50000, 0.25 ));
-        poolA.add(makeEvent("ElectionLosing", "Opposition", "Focus on Party", 0, 0, 0.5, "Surging Ahead", "Make Keynote Speech", 5, 0, 0, "In Latest Polls", "Hold Fundraiser",0, 20000, 0 ));
-        poolA.add(makeEvent("ElectionClose", "Twenty Days", "We Will Win", 0, 0, 0, "Remain", "Rally Supporters", 0, 0, 0, "For Election Campaigns", "Grasp For Votes",0, 0, 0 ));
+        poolA.add(makeEvent("ElectionWarning", "General Election", "Make Party Speech", 5, 0, 0, "To Be Held", "Strategize Campaign", 0, 0, 0.5, "Soon", "Raise Funds",0,15000, 0 ));
+        poolA.add(makeEvent("BeginCampaign", "Government", "Focus on People", 4, -7500, 0, "Begins", "Focus on Economy", 4, -10000, 0.3, "Election Campaign", "Focus on Party Issues",0,-12500, 0.8 ));
+        poolA.add(makeEvent("OppositionCampaign", "Opposition", "Criticise Policies", 2, 0, -0.2, "Begins", "Release Sound Bites", 2, -5000, 0.2, "Election Campaign", "Counter Campaign",4,-10000, 0.3 ));
+        poolA.add(makeEvent("ElectionProgress", "Election Campaigns", "Ease Funding", 0, -5000, 0, "Make Progress", "Continue Funding", 1, -7500, 0.2, "Around the Country", "Increase Funding",4,-12500, 0.3 ));
+        poolA.add(makeEvent("ElectionTwist", "Opposition", "Ignore Them", -8, 0, 0.5, "Targets", "Change Focus Areas", 4, -10000, -0.3, "Government Weaknesses", "Aggressive Campaigning",10,-15000, 0.3 ));
+        poolA.add(makeEvent("ElectionLosing", "Opposition", "Focus on Party", 0, 0, 0.5, "Surging Ahead", "Make Keynote Speech", 8, 0, 0, "In Latest Polls", "Hold Fundraiser",0, 10000, 0 ));
+        poolA.add(makeEvent("ElectionClose", "Twenty Days", "We Will Win", 2, 0, -0.2, "Remain", "Rally Supporters", 5, -5000, 0, "For Election Campaigns", "Grasp For Votes",8, -10000, 0 ));
     }
 
     //TODO
