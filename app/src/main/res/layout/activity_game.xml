@@ -6,32 +6,19 @@
     android:layout_height="match_parent"
     tools:context="com.honours.louis.politicsgame.GameActivity">
 
-    <View
-        android:id="@+id/line"
-        style="@style/Divider"
-        android:layout_width="0dp"
-        android:layout_marginTop="132dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/line1">
-
-    </View>
-
     <TextView
         android:id="@+id/textLastActionHeading2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="Effects"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLastChoice" />
+        app:layout_constraintTop_toBottomOf="@+id/line6" />
 
     <TextView
         android:id="@+id/textDate"
@@ -77,9 +64,22 @@
         android:id="@+id/line2"
         style="@style/Divider"
         android:layout_width="1dp"
-        app:layout_constraintBottom_toBottomOf="@+id/line"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/line3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/line1">
+
+    </View>
+
+    <View
+        android:id="@+id/line3"
+        style="@style/Divider"
+        android:layout_width="0dp"
+        android:layout_marginTop="132dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/line1">
 
@@ -89,11 +89,36 @@
         android:id="@+id/line4"
         style="@style/Divider"
         android:layout_width="1dp"
-        app:layout_constraintBottom_toBottomOf="@+id/line"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/line3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.33"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/line1">
+
+    </View>
+
+    <View
+        android:id="@+id/line5"
+        style="@style/Divider"
+        android:layout_width="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLastEvent">
+
+    </View>
+
+    <View
+        android:id="@+id/line6"
+        style="@style/Divider"
+        android:layout_width="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLastChoice">
 
     </View>
 
@@ -171,7 +196,7 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/line"
+        app:layout_constraintBottom_toTopOf="@+id/line3"
         app:layout_constraintEnd_toStartOf="@+id/line2"
         app:layout_constraintHorizontal_bias="0.542"
         app:layout_constraintStart_toEndOf="@+id/line4"
@@ -215,12 +240,14 @@
         android:id="@+id/textBudEffect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Budget"
         android:textAlignment="center"
         android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toTopOf="@+id/textDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textLastActionHeading2" />
@@ -255,7 +282,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line" />
+        app:layout_constraintTop_toBottomOf="@+id/line3" />
 
     <TextView
         android:id="@+id/textLastActionHeading"
@@ -263,29 +290,26 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Choice"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLastEvent" />
+        app:layout_constraintTop_toBottomOf="@+id/line5" />
 
     <TextView
         android:id="@+id/textLastChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLastActionHeading"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textLastActionHeading" />
 
     <TextView
         android:id="@+id/textLastEvent"
@@ -293,7 +317,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"

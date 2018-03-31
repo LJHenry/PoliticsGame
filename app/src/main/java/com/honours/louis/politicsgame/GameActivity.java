@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity {
     //Set necessary parameters before game start, takes bonuses as argument
     private void setup(int[] bonuses){
         //Set date
-        day = 1; dayTotal = 180; month = 6; year = 4;
+        day = 1; dayTotal = 1; month = 1; year = 1;
 
         //Determine bonuses from government type
         appBonus = bonuses[0];
@@ -171,8 +171,7 @@ public class GameActivity extends AppCompatActivity {
             }
             public void onFinish() {
                 //Called When GameOver is true
-                Toast toast = Toast.makeText(getApplicationContext(), "Game Finished", Toast.LENGTH_SHORT);
-                toast.show();
+
             }
         }.start();
     }
@@ -210,6 +209,11 @@ public class GameActivity extends AppCompatActivity {
 
     //Change resources
     private void changeResources(double[] effects){
+        //Clean existing
+        appChange = 0;
+        budChange = 0;
+        stabChange = 0;
+
         //If no election
         if(!election) {
             //Spread changes out over 30 ticks
@@ -226,6 +230,8 @@ public class GameActivity extends AppCompatActivity {
             stabChange = effects[2];
             bonuses();
             resourceChunk();
+
+            changes = false;
         }
     }
 
@@ -299,9 +305,11 @@ public class GameActivity extends AppCompatActivity {
     //Check for events
     private boolean eventCheck(){
         //Start of Election Events
-        if (dayTotal == 280 && year == 4) {
+        if (dayTotal == 250 && year == 4) {
             election = true;
         } else if (dayTotal == 359 && year == 4){
+            Toast toast = Toast.makeText(getApplicationContext(), "Game Finished", Toast.LENGTH_SHORT);
+            toast.show();
             gameOver = true;
         }
 
@@ -367,10 +375,7 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean timeCheck(){
         //Election Events
-        if(dayTotal ==  360 && year ==  4){
-            eventName = "Election";
-            return true;
-        } else if (dayTotal == 300 && year ==  4){
+        if (dayTotal == 290 && year ==  4){
             eventName = "BeginCampaign";
             return true;
         } else if (dayTotal == 302 && year == 4){
@@ -383,15 +388,14 @@ public class GameActivity extends AppCompatActivity {
         } else if (dayTotal == 320 && year == 4){
             eventName = "ElectionProgress";
             return true;
-        } else if (dayTotal == 330 && year == 4){
+        } else if (dayTotal == 335 && year == 4){
             eventName = "ElectionTwist";
             return true;
-        } else if (dayTotal == 335 && year == 4 && approval <= 50){
-            eventName = "ElectionLosing";
-            return true;
-        } else if (dayTotal == 340 && year == 4){
+        //} else if (dayTotal == 345 && year == 4 && approval <= 30){
+            //eventName = "ElectionLosing";
+            //return true;
+        } else if (dayTotal == 355 && year == 4){
             eventName = "ElectionClose";
-            election = false;
             return true;
         }
         return false;
