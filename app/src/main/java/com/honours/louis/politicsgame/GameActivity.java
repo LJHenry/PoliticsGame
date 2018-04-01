@@ -450,7 +450,7 @@ public class GameActivity extends AppCompatActivity {
         TextView c3App = eView.findViewById(R.id.c3App);
         TextView c3Bud = eView.findViewById(R.id.c3Bud);
         TextView c3Stab = eView.findViewById(R.id.c3Stab);
-        //Buttons
+        //Button
         Button button1 = eView.findViewById(R.id.button1);
         Button button2 = eView.findViewById(R.id.button2);
         Button button3 = eView.findViewById(R.id.button3);
