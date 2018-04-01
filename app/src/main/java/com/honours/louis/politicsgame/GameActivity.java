@@ -23,15 +23,12 @@ public class GameActivity extends AppCompatActivity {
 
     //TextViews
     private TextView dateText;
-
     private TextView appText;
     private TextView budText;
     private TextView stabText;
-
     private TextView appEffect;
     private TextView budEffect;
     private TextView stabEffect;
-
     private TextView eventText;
     private TextView choiceText;
 
@@ -119,7 +116,7 @@ public class GameActivity extends AppCompatActivity {
         stabBonus = bonuses[2];
 
         //Set Starting Resources
-        approval = 50;
+        approval =  50;
         budget = 50000;
         stability = 3;
 
@@ -170,10 +167,35 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
             public void onFinish() {
-                //Called When GameOver is true
-
+                //End
+                this.cancel();
+                endGame();
             }
         }.start();
+    }
+
+    //Conditions for Winning the election
+    private boolean elected(){
+        //Use score to calculate
+        if(getScore() >= 3){
+            return true;
+        }
+        return false;
+    }
+
+    //Get score based on resources
+    private int getScore(){
+        int score = 0;
+        if(approval >= 40){
+            score += 1;
+        }
+        if(budget >= 15000){
+            score += 1;
+        }
+        if(stability >= 3){
+            score += 1;
+        }
+        return score;
     }
 
     //Advance in game time
@@ -613,11 +635,28 @@ public class GameActivity extends AppCompatActivity {
         b.setMessage("Return to main menu? The game will end.").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
     }
 
+    public void endGame(){
+        //Start Finish activity with win or loss
+        Intent i = new Intent(GameActivity.this, FinishActivity.class);
+        i.putExtra("Name", countryName);
+        i.putExtra("Approval" , approval);
+        i.putExtra("Budget", budget);
+        i.putExtra("Stability", stability);
+        //Check Win conditions
+        if(elected()){
+            i.putExtra("Win", true);
+        } else {
+            i.putExtra("Win", false);
+        }
+
+
+        startActivity(i);
+        this.finish();
+    }
+
 
     //TODO
     //Add more random events
 
-    //Lose game activity
-    //Loss conditions
     //Questionnaire
 }

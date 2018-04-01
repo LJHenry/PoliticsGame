@@ -29,4 +29,13 @@
         <item>Libertarian</item>
     </string-array>
 
+    <!-- Array for Engagement Answer Spinner -->
+    <string-array name="engagement">
+        <item>Not Engaged</item>
+        <item>Slightly Engaged</item>
+        <item>Engaged</item>
+        <item>Very Engaged</item>
+        <item>Actively Engaged</item>
+    </string-array>
+
 </resources>

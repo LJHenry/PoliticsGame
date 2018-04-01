@@ -25,6 +25,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
     private int[] bonuses;
     private String countryName;
     private int type;
+    private String answer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,39 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
         spinnerVert.setSelection(1);
         //Provide description based on spinner selected item
         describe(spinnerHoriz, spinnerVert);
+
+        engagementPrompt();
+    }
+
+    private void engagementPrompt(){
+        //Engagement Prompt Alert Dialog Popup
+        View eView = getLayoutInflater().inflate(R.layout.dialog_engagement, null);
+        //Create Dialog
+        final AlertDialog alertDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(SetupActivity.this);
+        builder.setView(eView);
+        alertDialog = builder.create();
+
+        final Spinner answerSpinner = eView.findViewById(R.id.spinnerNumber);
+        ArrayAdapter<CharSequence> answerAdapter = ArrayAdapter.createFromResource(this, R.array.engagement, android.R.layout.simple_spinner_item);
+        answerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        answerSpinner.setAdapter(answerAdapter);
+
+        Button submit = eView.findViewById(R.id.buttonEngageSubmit);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answer = answerSpinner.getSelectedItem().toString();
+                alertDialog.dismiss();
+            }
+        });
+
+        //Prevent Dismissal
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+        //Show
+        alertDialog.show();
     }
 
     //If item selected is changed
@@ -83,6 +117,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
                                 i.putExtra("Name", countryName);
                                 i.putExtra("Bonuses" ,bonuses);
                                 i.putExtra("Type", type);
+                                i.putExtra("Engagement", answer);
                                 startActivity(i);
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:

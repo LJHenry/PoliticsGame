@@ -6,6 +6,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TrainingSuite {
 
+    private double difficulty;
+
+    public TrainingSuite(){
+        //Set factor positive effects are reduced by
+        difficulty = 1.25;
+    }
+
     public Event getTrainingEvent() {
         //Create an event for training
         //Random positive and negative values in a boundary for each choice
@@ -18,6 +25,11 @@ public class TrainingSuite {
         norm = makeSense(getEffects(2), 2);
         ext = makeSense(getEffects(3), 3);
 
+        //Round
+        round(dis);
+        round(norm);
+        round(ext);
+
         EventElement a = new EventElement("Training Event", "Dismissive", dis, "Object");
         EventElement b = new EventElement("Created by", "Normal", norm, "Context");
         EventElement c = new EventElement("getTrainingEvent()", "Extreme", ext, "Subject");
@@ -29,12 +41,9 @@ public class TrainingSuite {
 
     private double[] getEffects(int choice) {
         double[] effects = new double[3];
-        effects[0] = Math.round(getRandomValue("approval", choice));
-        effects[1] = Math.round(getRandomValue("budget", choice));
-        //Round stability
-        DecimalFormat df = new DecimalFormat("#.#");
-        String s = df.format(getRandomValue("stability", choice));
-        effects[2] = Double.parseDouble(s);
+        effects[0] = getRandomValue("approval", choice);
+        effects[1] = getRandomValue("budget", choice);
+        effects[2] = getRandomValue("stability", choice);
 
         return effects;
     }
@@ -64,22 +73,23 @@ public class TrainingSuite {
 
         if (posCount == 3) { //3 Positives
             //Make 1 random index negative
-            effects[index = new Random().nextInt(2)] = -effects[index];
+            effects[index = new Random().nextInt(2)] = -effects[index] * difficulty;
         } else if (posCount == 0) { //3 Negatives
             //Make 1 random index positive
-            effects[index = new Random().nextInt(2)] = Math.abs(effects[index]);
+            effects[index = new Random().nextInt(2)] = Math.abs(effects[index]) / difficulty;
         }
 
         if (zero && posCount == 2) { //2 Positives Only
             //Make 1 non zero index negative
             index = randomIndex(zeroIndex);
-            effects[index] = -effects[index];
+            effects[index] = -effects[index] * difficulty;
 
         } else if (zero && posCount == 0) { //2 Negatives Only
             //Make 1 non zero index positive
             index = randomIndex(zeroIndex);
-            effects[index] = Math.abs(effects[index]);
+            effects[index] = Math.abs(effects[index]) / difficulty;
         }
+
         return effects;
     }
 
@@ -113,33 +123,33 @@ public class TrainingSuite {
 
         if (choice == 1) {
             if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(0, 5);
+                i = ThreadLocalRandom.current().nextInt(1, 5);
 
             if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(0, 5000);
+                i = ThreadLocalRandom.current().nextInt(5000, 7500);
 
             if (resource == "stability")
                 i = ThreadLocalRandom.current().nextDouble(0.1, 0.3);
 
         } else if (choice == 2) {
             if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(5, 10);
+                i = ThreadLocalRandom.current().nextInt(6, 10);
 
             if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(5000, 10000);
+                i = ThreadLocalRandom.current().nextInt(7500, 10000);
 
             if (resource == "stability")
-                i = ThreadLocalRandom.current().nextDouble(0.3, 0.8);
+                i = ThreadLocalRandom.current().nextDouble(0.3, 0.5);
 
         } else if (choice == 3) {
             if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(10, 15);
+                i = ThreadLocalRandom.current().nextInt(11, 15);
 
             if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(10000, 15000);
+                i = ThreadLocalRandom.current().nextInt(10000, 12500);
 
             if (resource == "stability")
-                i = ThreadLocalRandom.current().nextDouble(0.8, 1);
+                i = ThreadLocalRandom.current().nextDouble(0.5, 0.7);
         }
 
         //Chance to be -
@@ -147,7 +157,7 @@ public class TrainingSuite {
             i = -i;
         } else {
             //Reduce positive effects
-            i = i / 2;
+            i = i / difficulty;
         }
         //Chance to be 0
         if (ThreadLocalRandom.current().nextInt(1, 6) < 3) {
@@ -155,5 +165,22 @@ public class TrainingSuite {
         }
 
         return i;
+    }
+
+    private double[] round(double[] effects){
+        //Round numbers
+        effects[0] = Math.round(effects[0]);
+        effects[1] = Math.round(effects[1]);
+        //Ensure stability isn't rounded to 0
+        if(effects[2] < 0 && effects[2] > 0.1){
+            effects[2] = effects[2] - 0.1;
+        } else if (effects[2] > 0 && effects[2] < 0.1){
+            effects[2] = effects[2] + 0.1;
+        }
+        DecimalFormat df = new DecimalFormat("#.#");
+        String s = df.format(effects[2]);
+        effects[2] = Double.parseDouble(s);
+
+        return effects;
     }
 }

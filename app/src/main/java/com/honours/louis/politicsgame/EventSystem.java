@@ -59,8 +59,8 @@ public class EventSystem {
         choice = c;
         situation = getSituation();
         String state = String.format("%.0f", approval) + "," + String.format("%.0f", budget) + "," + String.format("%.1f", stability) + "," + day + "," + year + "," + situation + "," + choice + "\n";
-        log(state);
-        new SendToServer().execute(logFilename); //THIS MUST BE MOVED
+        //log(state);
+        new SendToServer().execute(logFilename);
         lastEventSituation = situation;
     }
 

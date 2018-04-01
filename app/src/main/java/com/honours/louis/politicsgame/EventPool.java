@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
-/**
- * Will hold lists of premade events.
- * Created by Louis Henry
- */
-
 public class EventPool {
 
     private ArrayList<Event> poolA;
