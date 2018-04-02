@@ -32,7 +32,7 @@
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="125dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button"
@@ -49,13 +49,14 @@
             android:id="@+id/c2Bud"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:text="£"
             android:textColor="@android:color/holo_green_light" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="125dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button"
@@ -72,13 +73,14 @@
             android:id="@+id/c3Stab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:text="/5"
             android:textColor="@android:color/holo_blue_light" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="125dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button"

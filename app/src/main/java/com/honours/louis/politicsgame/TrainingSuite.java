@@ -25,6 +25,12 @@ public class TrainingSuite {
         bud = getEffect(2);
         stab = getEffect(3);
 
+        if(negativeChance()){
+            app = Math.abs(app);
+            bud = Math.abs(bud);
+            stab = Math.abs(stab);
+        }
+
         //Round
         round(app, 1);
         round(bud, 2 );
@@ -97,6 +103,14 @@ public class TrainingSuite {
 
         return effect;
     }
+
+    private boolean negativeChance(){
+        if(ThreadLocalRandom.current().nextInt(1, 6) < 4){
+            return true;
+        }
+        return false;
+    }
+
 
     /*
     //Ensure there is at least 1 positive or Negative effect in each choice

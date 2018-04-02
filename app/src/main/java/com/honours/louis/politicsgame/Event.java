@@ -54,25 +54,25 @@ public class Event {
 
     //Budget
     public String getChoiceB(){
-        return eventObj.getChoice();
+        return eventCon.getChoice();
     }
 
     public double getEffectB(){
-        return eventObj.getEffect();
+        return eventCon.getEffect();
     }
 
-    public String getStringEffectB(){return eventObj.getEffectAsString();}
+    public String getStringEffectB(){return eventCon.getEffectAsString();}
 
     //Stability
     public String getChoiceS(){
-        return eventObj.getChoice();
+        return eventSub.getChoice();
     }
 
     public double getEffectS(){
-        return eventObj.getEffect();
+        return eventSub.getEffect();
     }
 
-    public String getStringEffectS(){return eventObj.getEffectAsString();}
+    public String getStringEffectS(){return eventSub.getEffectAsString();}
 
 
 
