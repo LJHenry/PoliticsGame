@@ -1,6 +1,7 @@
 package com.honours.louis.politicsgame;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -55,9 +56,11 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
     private void setValues(){
         if(getIntent().getBooleanExtra("Win", false)){
             winLoss.setText("You Win!");
+            winLoss.setTextColor(Color.parseColor("#019acc"));
             getDescription(true);
         } else {
             winLoss.setText("You Lose!");
+            winLoss.setTextColor(Color.parseColor("#cf1313"));
             getDescription(false);
         }
 

@@ -99,7 +99,7 @@ public class EventSystem {
         try {
             outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
             if (lastEventSituation == null) {
-                outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + "Engagement: " + engagement + "\n").getBytes());
+                outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
             }
             outputStream.write(state.getBytes());
             outputStream.close();
