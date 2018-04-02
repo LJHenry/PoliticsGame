@@ -73,6 +73,18 @@ public class Event {
 
     public String getStringEffectS(){return eventSub.getEffectAsString();}
 
+    //Negativity
+    public void setNegative(){
+        this.isNegative = true;
+    }
+
+    public boolean isNegative(){
+        if(isNegative)
+            return true;
+
+        return false;
+    }
+
 
 
 

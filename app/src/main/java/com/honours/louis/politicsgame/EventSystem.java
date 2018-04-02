@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
@@ -26,6 +27,7 @@ public class EventSystem {
 
     private String countryName;
     private int govType;
+    private String engagement;
     private double approval;
     private double budget;
     private double stability;
@@ -34,6 +36,8 @@ public class EventSystem {
     private String situation;
     private int choice;
     private String lastEventSituation;
+    private String isNegative;
+    //Event Pool
     private EventPool pool;
     //Log File
     private String logFilename; //Will use devices Android id - unique and recommended secure ID method by Google
@@ -42,124 +46,66 @@ public class EventSystem {
     //AI Training
     public TrainingSuite t;
 
-    public EventSystem(Context context, String cn, int gt) {
+    public EventSystem(Context context, String cn, int gt, String e) {
         c = context.getApplicationContext();
         countryName = cn;
         govType = gt;
+        engagement = e;
+        startEventCount = 0;
         logFilename = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
         pool = new EventPool();
         t = new TrainingSuite();
     }
 
-    public void getGameState(double a, double b, double s, int c) {
+    public void getGameState(double a, double b, double s, int c, boolean negative) {
         approval = a;
         budget = b;
         stability = s;
         choice = c;
+        if (negative) {
+            isNegative = "negative";
+        } else {
+            isNegative = "positive";
+        }
         situation = getSituation();
-        String state = String.valueOf(approval) + "," + String.valueOf(budget) + "," + String.valueOf(stability) + "," + situation + "," + choice + "\n";
-        startEventCount = 0;
+        String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
         log(state);
         new SendToServer().execute(logFilename);
         lastEventSituation = situation;
     }
 
-    /*
-    //Rate resource amounts with a 7 point scale, 4 is average
-    private String getResourceState(){
+    //Get resources as percentage(string)
+    private String getResourcePercentage(){
 
-        String a = "Default";
-        if(approval >= 60){
-            //7
-            a = "7";
-        } else if(approval < 60 && approval >= 50){
-            //6
-            a = "6";
-        } else if(approval < 50 && approval >= 40){
-            //5
-            a = "5";
-        } else if(approval < 40 && approval >= 30){
-            //4
-            a = "4";
-        } else if(approval < 30 && approval >= 20){
-            //3
-            a = "3";
-        } else if(approval < 20 && approval >= 10){
-            //2
-            a = "2";
-        } else if(approval < 10){
-            //1
-            a = "1";
-        }
+        //% of approval
+        double a = (approval/100) * 100;
 
-        String b = "Default";
-        if(budget >= 60000){
-            //7
-            b = "7";
-        } else if(budget < 60000 && budget >= 50000){
-            //6
-            b = "6";
-        } else if(budget < 50000 && budget >= 40000){
-            //5
-            b = "5";
-        } else if(budget < 40000 && budget >= 30000){
-            //4
-            b = "4";
-        } else if(budget < 30000 && budget >= 20000){
-            //3
-            b = "3";
-        } else if(budget < 20000 && budget >= 10000){
-            //2
-            b = "2";
-        } else if(budget < 10000){
-            //1
-            b = "1";
-        }
+        //% of budget
+        double b = (budget/100000) * 100;
 
-        String s = "Default";
-        if(stability >= 4.5){
-            //7
-            s = "7";
-        } else if(stability < 4.5 && stability >= 4){
-            //6
-            s = "6";
-        } else if(stability < 4 && stability >= 3.5){
-            //5
-            s = "5";
-        } else if(stability < 3.5 && stability >= 3){
-            //4
-            s = "4";
-        } else if(stability < 3 && stability >= 2.5){
-            //3
-            s = "3";
-        } else if(stability < 2.5 && stability >= 2){
-            //2
-            s = "2";
-        } else if(stability < 2){
-            //1
-            s = "1";
-        }
+        //% of stability
+        double s = (stability/5) * 100;
 
-        return a + "," + b + "," + s;
+        //Round values
+
+
+        return String.format("%.0f", a) + "," + String.format("%.0f", b) + "," + String.format("%.0f", s);
     }
-    */
 
 
     //Write out game state to log - INTERNAL PRIVATE STORAGE
     private void log(String state) {
-        if(startEventCount <= 3){
-            FileOutputStream outputStream;
-            try {
-                outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
-                if (this.lastEventSituation == null) {
-                    outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + "\n").getBytes());
-                }
-                outputStream.write(state.getBytes());
-                outputStream.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+        FileOutputStream outputStream;
+        try {
+            outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
+            if (lastEventSituation == null) {
+                outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + "Engagement: " + engagement + "\n").getBytes());
             }
+            outputStream.write(state.getBytes());
+            outputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

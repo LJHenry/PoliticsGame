@@ -48,9 +48,9 @@ public class GameActivity extends AppCompatActivity {
     private String countryName;
     private int govType;
     //Bonus variables
-    private int appBonus;
-    private int budBonus;
-    private int stabBonus;
+    private double appBonus;
+    private double budBonus;
+    private double stabBonus;
 
     //Date variables
     private int day;
@@ -111,16 +111,21 @@ public class GameActivity extends AppCompatActivity {
 
         //Determine bonuses from government type
         appBonus = bonuses[0];
-        budBonus = bonuses[1] ;
+        budBonus = bonuses[1];
         stabBonus = bonuses[2];
 
-        //Set Starting Resources
-        approval =  50;
-        budget = 50000;
-        stability = 3;
+        appBonus = appBonus * 5;
+        budBonus = budBonus * 1000;
+        stabBonus = stabBonus / 10;
+
+        //Set Starting Resources - 50%
+        approval += appBonus + 50;
+        budget += budBonus += 50000;
+
+        stability = stabBonus += 2.5;
 
         //Events
-        eventSystem = new EventSystem(getApplicationContext(), countryName, govType);
+        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"));
         eventCounter = 0;
         eventLock = true;
         eventAlertBuilder = new AlertDialog.Builder(GameActivity.this);
@@ -239,29 +244,14 @@ public class GameActivity extends AppCompatActivity {
         if(!election) {
             //Spread changes out over 30 ticks
             resourceChange = effect / 30;
-            bonuses(resource);
 
             changes = true;
         } else if (election){
             //Change resources absolutely
             resourceChange = effect;
-            bonuses(resource);
             resourceChunk();
 
             changes = false;
-        }
-    }
-
-    private void bonuses(String resource){
-        //Bonus based on resource
-        if(resource == "Approval"){
-            resourceChange += ((resourceChange/100) * appBonus);
-        } else if(resource == "Budget"){
-            resourceChange += ((resourceChange/100) * budBonus);
-        } else if(resource == "Stability"){
-            resourceChange += ((resourceChange/100) * stabBonus);
-        } else {
-            //Error
         }
     }
 
@@ -270,6 +260,7 @@ public class GameActivity extends AppCompatActivity {
         if(changes) {
             switch(changedResource){
                 case "Approval":
+                    //Approval - Don't go below 0, above 100
                     approval += resourceChange;
                     if (approval > 100) {
                         approval = 100;
@@ -281,8 +272,11 @@ public class GameActivity extends AppCompatActivity {
                     break;
 
                 case "Budget":
-                    //Budget - Don't go below 0
+                    //Budget - Don't go below 0, above 100000
                     budget += resourceChange;
+                    if(budget > 100000){
+                        budget = 100000;
+                    }
                     if (budget < 0) {
                         budget = 0;
                         gameOver = true;
@@ -290,7 +284,7 @@ public class GameActivity extends AppCompatActivity {
                     break;
 
                 case "Stability":
-                    //Stability - Don't go over 5, under 0
+                    //Stability - Don't go below 0, above 5
                     stability += resourceChange;
                     if (stability > 5) {
                         stability = 5;
@@ -489,7 +483,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 1;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });
@@ -500,7 +494,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 2;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });
@@ -511,7 +505,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 3;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });

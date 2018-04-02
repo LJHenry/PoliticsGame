@@ -30,7 +30,9 @@ public class TrainingSuite {
         bud = getEffect(2, tier);
         stab = getEffect(3, tier);
 
-        if(negativeChance()){
+        boolean negative = negativeChance();
+
+        if(negative){
             app = -app;
             bud = -bud;
             stab = -stab;
@@ -46,6 +48,8 @@ public class TrainingSuite {
         EventElement c = new EventElement("getTrainingEvent()", "Stability", stab, "Subject");
 
         Event e = new Event(a, b, c);
+        if(negative)
+            e.setNegative();
 
         return e;
     }
