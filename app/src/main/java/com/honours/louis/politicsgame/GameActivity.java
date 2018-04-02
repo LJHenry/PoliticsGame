@@ -489,7 +489,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 1;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, dayTotal, year, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber);
                 getChoice(e);
             }
         });
@@ -500,7 +500,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 2;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, dayTotal, year, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber);
                 getChoice(e);
             }
         });
@@ -511,7 +511,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 3;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, dayTotal, year, choiceNumber);
+                eventSystem.getGameState(approval, budget, stability, choiceNumber);
                 getChoice(e);
             }
         });

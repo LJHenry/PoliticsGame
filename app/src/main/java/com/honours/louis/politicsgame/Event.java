@@ -33,7 +33,6 @@ public class Event {
         return this.eventName;
     }
 
-
     public String getEventTitle(){
         String title = this.eventObj.getName() + " " + this.eventCon.getName() + " " + this.eventSub.getName();
         return title;

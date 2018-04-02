@@ -38,6 +38,7 @@ public class EventSystem {
     //Log File
     private String logFilename; //Will use devices Android id - unique and recommended secure ID method by Google
     private Context c;
+    private int startEventCount;
     //AI Training
     public TrainingSuite t;
 
@@ -50,76 +51,121 @@ public class EventSystem {
         t = new TrainingSuite();
     }
 
-    public void getGameState(double a, double b, double s, int d, int y, int c) {
+    public void getGameState(double a, double b, double s, int c) {
         approval = a;
         budget = b;
         stability = s;
-        //day = d;
-        //year = y;
         choice = c;
         situation = getSituation();
-        String state = getResourceState() + "," + situation + "," + choice + "\n"; //+ day + "," + year + ","
+        String state = String.valueOf(approval) + "," + String.valueOf(budget) + "," + String.valueOf(stability) + "," + situation + "," + choice + "\n";
+        startEventCount = 0;
         log(state);
         new SendToServer().execute(logFilename);
         lastEventSituation = situation;
     }
 
-    //Use keywords High, Medium and Low for resource levels
+    /*
+    //Rate resource amounts with a 7 point scale, 4 is average
     private String getResourceState(){
 
         String a = "Default";
-        if(approval >= 50){
-            //High
-            a = "High";
+        if(approval >= 60){
+            //7
+            a = "7";
+        } else if(approval < 60 && approval >= 50){
+            //6
+            a = "6";
         } else if(approval < 50 && approval >= 40){
-            //Medium
-            a = "Medium";
-        } else if(approval < 40){
-            //Low
-            a = "Low";
+            //5
+            a = "5";
+        } else if(approval < 40 && approval >= 30){
+            //4
+            a = "4";
+        } else if(approval < 30 && approval >= 20){
+            //3
+            a = "3";
+        } else if(approval < 20 && approval >= 10){
+            //2
+            a = "2";
+        } else if(approval < 10){
+            //1
+            a = "1";
         }
 
         String b = "Default";
-        if(budget >= 40000){
-            //High
-            b = "High";
+        if(budget >= 60000){
+            //7
+            b = "7";
+        } else if(budget < 60000 && budget >= 50000){
+            //6
+            b = "6";
+        } else if(budget < 50000 && budget >= 40000){
+            //5
+            b = "5";
         } else if(budget < 40000 && budget >= 30000){
-            //Medium
-            b = "Medium";
-        } else if(budget < 30000){
-            //Low
-            b = "Low";
+            //4
+            b = "4";
+        } else if(budget < 30000 && budget >= 20000){
+            //3
+            b = "3";
+        } else if(budget < 20000 && budget >= 10000){
+            //2
+            b = "2";
+        } else if(budget < 10000){
+            //1
+            b = "1";
         }
 
         String s = "Default";
-        if(stability >= 3.5){
-            //High
-            s = "High";
-        } else if(stability < 3.5 && stability >= 2){
-            //Medium
-            s = "Medium";
+        if(stability >= 4.5){
+            //7
+            s = "7";
+        } else if(stability < 4.5 && stability >= 4){
+            //6
+            s = "6";
+        } else if(stability < 4 && stability >= 3.5){
+            //5
+            s = "5";
+        } else if(stability < 3.5 && stability >= 3){
+            //4
+            s = "4";
+        } else if(stability < 3 && stability >= 2.5){
+            //3
+            s = "3";
+        } else if(stability < 2.5 && stability >= 2){
+            //2
+            s = "2";
         } else if(stability < 2){
-            //Low
-            s = "Low";
+            //1
+            s = "1";
         }
 
         return a + "," + b + "," + s;
     }
+    */
+
 
     //Write out game state to log - INTERNAL PRIVATE STORAGE
     private void log(String state) {
-        FileOutputStream outputStream;
-        try {
-            outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
-            if (this.lastEventSituation == null) {
-                outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + "\n").getBytes());
-            }
-            outputStream.write(state.getBytes());
-            outputStream.close();
+        if(startEventCount <= 3){
+            FileOutputStream outputStream;
+            try {
+                outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
+                if (this.lastEventSituation == null) {
+                    outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + "\n").getBytes());
+                }
+                outputStream.write(state.getBytes());
+                outputStream.close();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    //Clear Log
+    private void deleteLog(){
+        c.deleteFile(logFilename);
     }
 
     //Get a new event

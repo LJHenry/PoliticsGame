@@ -1,5 +1,8 @@
 package com.honours.louis.politicsgame;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,15 +23,17 @@ public class TrainingSuite {
         double bud;
         double stab;
 
+        int tier = ThreadLocalRandom.current().nextInt(1, 4);
+        Log.d("TRAINING SUITE", "Random tier value: " + String.valueOf(tier));
         //Get effects
-        app = getEffect(1);
-        bud = getEffect(2);
-        stab = getEffect(3);
+        app = getEffect(1, tier);
+        bud = getEffect(2, tier);
+        stab = getEffect(3, tier);
 
         if(negativeChance()){
-            app = Math.abs(app);
-            bud = Math.abs(bud);
-            stab = Math.abs(stab);
+            app = -app;
+            bud = -bud;
+            stab = -stab;
         }
 
         //Round
@@ -36,36 +41,61 @@ public class TrainingSuite {
         round(bud, 2 );
         round(stab, 3);
 
-        EventElement a = new EventElement("Training Event", "Dismissive", app, "Object");
-        EventElement b = new EventElement("Created by", "Normal", bud, "Context");
-        EventElement c = new EventElement("getTrainingEvent()", "Extreme", stab, "Subject");
+        EventElement a = new EventElement("Training Event", "Approval", app, "Object");
+        EventElement b = new EventElement("Created by", "Budget", bud, "Context");
+        EventElement c = new EventElement("getTrainingEvent()", "Stability", stab, "Subject");
 
         Event e = new Event(a, b, c);
 
         return e;
     }
 
-    private double getEffect(int choice) {
+    private double getEffect(int choice, int tier) {
         double effect;
-        effect = getRandomValue(choice);
+        effect = getRandomValue(choice, tier);
 
         return effect;
     }
 
     //Get random value for Training events
-    private double getRandomValue(int choice) {
+    private double getRandomValue(int choice, int tier) {
 
         double i = 0;
 
-        if (choice == 1) {
-            //Approval
-            i = ThreadLocalRandom.current().nextInt(1, 10);
-        } else if (choice == 2) {
-            //Budget
-            i = ThreadLocalRandom.current().nextInt(5000, 125000);
-        } else if (choice == 3) {
-            //Stability
-            i = ThreadLocalRandom.current().nextDouble(0.1, 0.5);
+        //3 Tiers
+        if(tier == 1){
+            if (choice == 1) {
+                //Approval
+                i = ThreadLocalRandom.current().nextInt(1, 5);
+            } else if (choice == 2) {
+                //Budget
+                i = ThreadLocalRandom.current().nextInt(5000, 7500);
+            } else if (choice == 3) {
+                //Stability
+                i = ThreadLocalRandom.current().nextDouble(0.1, 0.25);
+            }
+        } else if(tier == 2){
+            if (choice == 1) {
+                //Approval
+                i = ThreadLocalRandom.current().nextInt(5, 10);
+            } else if (choice == 2) {
+                //Budget
+                i = ThreadLocalRandom.current().nextInt(7500, 10000);
+            } else if (choice == 3) {
+                //Stability
+                i = ThreadLocalRandom.current().nextDouble(0.25, 0.35);
+            }
+        } else if(tier == 3){
+            if (choice == 1) {
+                //Approval
+                i = ThreadLocalRandom.current().nextInt(10, 15);
+            } else if (choice == 2) {
+                //Budget
+                i = ThreadLocalRandom.current().nextInt(10000, 12500);
+            } else if (choice == 3) {
+                //Stability
+                i = ThreadLocalRandom.current().nextDouble(0.35, 0.5);
+            }
         }
 
         /*
@@ -87,18 +117,14 @@ public class TrainingSuite {
 
     private double round(double effect, int choice){
         //Round numbers
-        if(choice < 2){
+        if(choice <= 2){
             effect = Math.round(effect);
-        } else if (choice == 2){
+        } else if (choice == 3){
             //Ensure stability isn't rounded to 0
-            if(effect < 0 && effect > 0.1){
-                effect = effect - 0.1;
-            } else if (effect > 0 && effect < 0.1){
-                effect = effect + 0.1;
-            }
             DecimalFormat df = new DecimalFormat("#.#");
             String s = df.format(effect);
             effect = Double.parseDouble(s);
+            Log.d("TRAINING SUITE", "Stability value: " + effect);
         }
 
         return effect;
