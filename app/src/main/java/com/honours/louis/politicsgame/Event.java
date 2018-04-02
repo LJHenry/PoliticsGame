@@ -2,7 +2,7 @@ package com.honours.louis.politicsgame;
 
 /**
  * Class for events that will happen throughout the game.
- * An event holds 3 EventInstances.
+ * An event holds 3 Event Elements.
  * Created by Louis Henry on 06/02/2018.
  */
 
@@ -13,6 +13,7 @@ public class Event {
     private EventElement eventCon;
     private EventElement eventSub;
     private String eventName;
+    private boolean isNegative;
 
     public Event(){
         //For null event
@@ -39,39 +40,39 @@ public class Event {
     }
 
     //Get choices
-    //Dismissive
-    public String getDisChoice(){
+    //Approval
+    public String getChoiceA(){
         return eventObj.getChoice();
     }
-    public double[] getDisEffects(){
-        return eventObj.getEffects();
-    }
-    public double getDisEffectByIndex(int i){
-        return eventObj.getEffect(i);
-    }
-    public String getDisEffectsAsString(){return eventObj.getEffectsAsString();}
 
-    //Normal
-    public String getNormChoice(){
-        return eventCon.getChoice();
+    public double getEffectA(){
+        return eventObj.getEffect();
     }
-    public double[] getNormEffects(){return eventCon.getEffects();}
-    public double getNormEffectByIndex(int i){
-        return eventCon.getEffect(i);
-    }
-    public String getNormEffectsAsString(){return eventCon.getEffectsAsString();}
 
-    //Extreme
-    public String getExtChoice(){
-        return eventSub.getChoice();
+    public String getStringEffectA(){return eventObj.getEffectAsString();}
+
+
+    //Budget
+    public String getChoiceB(){
+        return eventObj.getChoice();
     }
-    public double[] getExtEffects(){
-        return eventSub.getEffects();
+
+    public double getEffectB(){
+        return eventObj.getEffect();
     }
-    public double getExtEffectByIndex(int i){
-        return eventSub.getEffect(i);
+
+    public String getStringEffectB(){return eventObj.getEffectAsString();}
+
+    //Stability
+    public String getChoiceS(){
+        return eventObj.getChoice();
     }
-    public String getExtEffectsAsString(){return eventSub.getEffectsAsString();}
+
+    public double getEffectS(){
+        return eventObj.getEffect();
+    }
+
+    public String getStringEffectS(){return eventObj.getEffectAsString();}
 
 
 

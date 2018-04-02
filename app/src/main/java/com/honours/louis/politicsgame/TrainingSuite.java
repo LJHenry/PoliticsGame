@@ -16,38 +16,89 @@ public class TrainingSuite {
     public Event getTrainingEvent() {
         //Create an event for training
         //Random positive and negative values in a boundary for each choice
-        double[] dis;
-        double[] norm;
-        double[] ext;
+        double app;
+        double bud;
+        double stab;
 
-        //Ensure choices will have at least 1 positive and negative
-        dis = makeSense(getEffects(1), 1);
-        norm = makeSense(getEffects(2), 2);
-        ext = makeSense(getEffects(3), 3);
+        //Get effects
+        app = getEffect(1);
+        bud = getEffect(2);
+        stab = getEffect(3);
 
         //Round
-        round(dis);
-        round(norm);
-        round(ext);
+        round(app, 1);
+        round(bud, 2 );
+        round(stab, 3);
 
-        EventElement a = new EventElement("Training Event", "Dismissive", dis, "Object");
-        EventElement b = new EventElement("Created by", "Normal", norm, "Context");
-        EventElement c = new EventElement("getTrainingEvent()", "Extreme", ext, "Subject");
+        EventElement a = new EventElement("Training Event", "Dismissive", app, "Object");
+        EventElement b = new EventElement("Created by", "Normal", bud, "Context");
+        EventElement c = new EventElement("getTrainingEvent()", "Extreme", stab, "Subject");
 
         Event e = new Event(a, b, c);
 
         return e;
     }
 
-    private double[] getEffects(int choice) {
-        double[] effects = new double[3];
-        effects[0] = getRandomValue("approval", choice);
-        effects[1] = getRandomValue("budget", choice);
-        effects[2] = getRandomValue("stability", choice);
+    private double getEffect(int choice) {
+        double effect;
+        effect = getRandomValue(choice);
 
-        return effects;
+        return effect;
     }
 
+    //Get random value for Training events
+    private double getRandomValue(int choice) {
+
+        double i = 0;
+
+        if (choice == 1) {
+            //Approval
+            i = ThreadLocalRandom.current().nextInt(1, 10);
+        } else if (choice == 2) {
+            //Budget
+            i = ThreadLocalRandom.current().nextInt(5000, 125000);
+        } else if (choice == 3) {
+            //Stability
+            i = ThreadLocalRandom.current().nextDouble(0.1, 0.5);
+        }
+
+        /*
+        //Chance to be -
+        if (ThreadLocalRandom.current().nextInt(1, 10) < 6) {
+            i = -i;
+        } else {
+            //Reduce positive effects
+            i = i / difficulty;
+        }
+        //Chance to be 0
+        if (ThreadLocalRandom.current().nextInt(1, 6) < 3) {
+            i = 0;
+        }
+        */
+
+        return i;
+    }
+
+    private double round(double effect, int choice){
+        //Round numbers
+        if(choice < 2){
+            effect = Math.round(effect);
+        } else if (choice == 2){
+            //Ensure stability isn't rounded to 0
+            if(effect < 0 && effect > 0.1){
+                effect = effect - 0.1;
+            } else if (effect > 0 && effect < 0.1){
+                effect = effect + 0.1;
+            }
+            DecimalFormat df = new DecimalFormat("#.#");
+            String s = df.format(effect);
+            effect = Double.parseDouble(s);
+        }
+
+        return effect;
+    }
+
+    /*
     //Ensure there is at least 1 positive or Negative effect in each choice
     private double[] makeSense(double[] effects, int choice) {
         int posCount = 0;
@@ -115,72 +166,5 @@ public class TrainingSuite {
         }
         return false;
     }
-
-    //Get random value for Training events
-    private double getRandomValue(String resource, int choice) {
-
-        double i = 0;
-
-        if (choice == 1) {
-            if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(1, 5);
-
-            if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(5000, 7500);
-
-            if (resource == "stability")
-                i = ThreadLocalRandom.current().nextDouble(0.1, 0.3);
-
-        } else if (choice == 2) {
-            if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(6, 10);
-
-            if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(7500, 10000);
-
-            if (resource == "stability")
-                i = ThreadLocalRandom.current().nextDouble(0.3, 0.5);
-
-        } else if (choice == 3) {
-            if (resource == "approval")
-                i = ThreadLocalRandom.current().nextInt(11, 15);
-
-            if (resource == "budget")
-                i = ThreadLocalRandom.current().nextInt(10000, 12500);
-
-            if (resource == "stability")
-                i = ThreadLocalRandom.current().nextDouble(0.5, 0.7);
-        }
-
-        //Chance to be -
-        if (ThreadLocalRandom.current().nextInt(1, 10) < 6) {
-            i = -i;
-        } else {
-            //Reduce positive effects
-            i = i / difficulty;
-        }
-        //Chance to be 0
-        if (ThreadLocalRandom.current().nextInt(1, 6) < 3) {
-            i = 0;
-        }
-
-        return i;
-    }
-
-    private double[] round(double[] effects){
-        //Round numbers
-        effects[0] = Math.round(effects[0]);
-        effects[1] = Math.round(effects[1]);
-        //Ensure stability isn't rounded to 0
-        if(effects[2] < 0 && effects[2] > 0.1){
-            effects[2] = effects[2] - 0.1;
-        } else if (effects[2] > 0 && effects[2] < 0.1){
-            effects[2] = effects[2] + 0.1;
-        }
-        DecimalFormat df = new DecimalFormat("#.#");
-        String s = df.format(effects[2]);
-        effects[2] = Double.parseDouble(s);
-
-        return effects;
-    }
+    */
 }

@@ -54,14 +54,56 @@ public class EventSystem {
         approval = a;
         budget = b;
         stability = s;
-        day = d;
-        year = y;
+        //day = d;
+        //year = y;
         choice = c;
         situation = getSituation();
-        String state = String.format("%.0f", approval) + "," + String.format("%.0f", budget) + "," + String.format("%.1f", stability) + "," + day + "," + year + "," + situation + "," + choice + "\n";
-        //log(state);
+        String state = getResourceState() + "," + situation + "," + choice + "\n"; //+ day + "," + year + ","
+        log(state);
         new SendToServer().execute(logFilename);
         lastEventSituation = situation;
+    }
+
+    //Use keywords High, Medium and Low for resource levels
+    private String getResourceState(){
+
+        String a = "Default";
+        if(approval >= 50){
+            //High
+            a = "High";
+        } else if(approval < 50 && approval >= 40){
+            //Medium
+            a = "Medium";
+        } else if(approval < 40){
+            //Low
+            a = "Low";
+        }
+
+        String b = "Default";
+        if(budget >= 40000){
+            //High
+            b = "High";
+        } else if(budget < 40000 && budget >= 30000){
+            //Medium
+            b = "Medium";
+        } else if(budget < 30000){
+            //Low
+            b = "Low";
+        }
+
+        String s = "Default";
+        if(stability >= 3.5){
+            //High
+            s = "High";
+        } else if(stability < 3.5 && stability >= 2){
+            //Medium
+            s = "Medium";
+        } else if(stability < 2){
+            //Low
+            s = "Low";
+        }
+
+        return a + "," + b + "," + s;
     }
 
     //Write out game state to log - INTERNAL PRIVATE STORAGE

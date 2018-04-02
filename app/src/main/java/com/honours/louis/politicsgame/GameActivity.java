@@ -41,9 +41,8 @@ public class GameActivity extends AppCompatActivity {
     private double stability; //Level from 0 to 5
     //Subtract/add a fraction of choice effects over time
     private boolean changes;
-    private double appChange;
-    private double budChange;
-    private double stabChange;
+    private double resourceChange;
+    private String changedResource;
 
     //Country Details
     private String countryName;
@@ -230,97 +229,115 @@ public class GameActivity extends AppCompatActivity {
     }
 
     //Change resources
-    private void changeResources(double[] effects){
+    private void changeResources(double effect, String resource){
         //Clean existing
-        appChange = 0;
-        budChange = 0;
-        stabChange = 0;
+        resourceChange = 0;
+        //Set resource to be changed
+        changedResource = resource;
 
         //If no election
         if(!election) {
             //Spread changes out over 30 ticks
-            appChange = effects[0] / 30;
-            budChange = effects[1] / 30;
-            stabChange = effects[2] / 30;
-            bonuses();
+            resourceChange = effect / 30;
+            bonuses(resource);
 
             changes = true;
         } else if (election){
             //Change resources absolutely
-            appChange = effects[0];
-            budChange = effects[1];
-            stabChange = effects[2];
-            bonuses();
+            resourceChange = effect;
+            bonuses(resource);
             resourceChunk();
 
             changes = false;
         }
     }
 
-    //Apply bonuses
-    private void bonuses(){
-        appChange += ((appChange/100) * appBonus);
-        budChange += ((budChange/100) * budBonus);
-        stabChange += ((stabChange/100) * stabBonus);
+    private void bonuses(String resource){
+        //Bonus based on resource
+        if(resource == "Approval"){
+            resourceChange += ((resourceChange/100) * appBonus);
+        } else if(resource == "Budget"){
+            resourceChange += ((resourceChange/100) * budBonus);
+        } else if(resource == "Stability"){
+            resourceChange += ((resourceChange/100) * stabBonus);
+        } else {
+            //Error
+        }
     }
 
     //Change resources per tick, if one reaches 0 game over
     private void resourceTick(){
         if(changes) {
-            approval += appChange;
-            if (approval > 100) {
-                approval = 100;
-            }
-            if (approval < 0) {
-                approval = 0;
-                gameOver = true;
-            }
+            switch(changedResource){
+                case "Approval":
+                    approval += resourceChange;
+                    if (approval > 100) {
+                        approval = 100;
+                    }
+                    if (approval < 0) {
+                        approval = 0;
+                        gameOver = true;
+                    }
+                    break;
 
-            //Budget - Don't go below 0
-            budget += budChange;
-            if (budget < 0) {
-                budget = 0;
-                gameOver = true;
-            }
+                case "Budget":
+                    //Budget - Don't go below 0
+                    budget += resourceChange;
+                    if (budget < 0) {
+                        budget = 0;
+                        gameOver = true;
+                    }
+                    break;
 
-            //Stability - Don't go over 5, under 0
-            stability += stabChange;
-            if (stability > 5) {
-                stability = 5;
-            }
-            if (stability < 0) {
-                stability = 0;
-                gameOver = true;
+                case "Stability":
+                    //Stability - Don't go over 5, under 0
+                    stability += resourceChange;
+                    if (stability > 5) {
+                        stability = 5;
+                    }
+                    if (stability < 0) {
+                        stability = 0;
+                        gameOver = true;
+                    }
+                    break;
             }
         }
     }
 
     //Change resources at once, check for 0
     private void resourceChunk(){
-        approval += appChange;
-        if (approval > 100) {
-            approval = 100;
-        }
-        if (approval < 0) {
-            approval = 0;
-            gameOver = true;
-        }
+        switch(changedResource){
+            case "Approval":
+                approval += resourceChange;
+                if (approval > 100) {
+                    approval = 100;
+                }
+                if (approval < 0) {
+                    approval = 0;
+                    gameOver = true;
+                }
+                break;
 
-        //Budget - Don't go below 0
-        budget += budChange;
-        if (budget < 0) {
-            budget = 0;
-            gameOver = true;
-        }
+            case "Budget":
+                //Budget - Don't go below 0
+                budget += resourceChange;
+                if (budget < 0) {
+                    budget = 0;
+                    gameOver = true;
+                }
+                break;
 
-        //Stability - Don't go over 5, under 0
-        stability += stabChange;
-        if (stability > 5) {
-            stability = 5;
-        }
-        if (stability < 0) {
-            stability = 0;
-            gameOver = true;
+            case "Stability":
+                //Stability - Don't go over 5, under 0
+                stability += resourceChange;
+                if (stability > 5) {
+                    stability = 5;
+                }
+                if (stability < 0) {
+                    stability = 0;
+                    gameOver = true;
+                }
+                break;
         }
     }
 
@@ -440,15 +457,9 @@ public class GameActivity extends AppCompatActivity {
 
         //Approval
         TextView c1App = eView.findViewById(R.id.c1App);
-        TextView c1Bud = eView.findViewById(R.id.c1Bud);
-        TextView c1Stab = eView.findViewById(R.id.c1Stab);
         //Budget
-        TextView c2App = eView.findViewById(R.id.c2App);
         TextView c2Bud = eView.findViewById(R.id.c2Bud);
-        TextView c2Stab = eView.findViewById(R.id.c2Stab);
         //Stability
-        TextView c3App = eView.findViewById(R.id.c3App);
-        TextView c3Bud = eView.findViewById(R.id.c3Bud);
         TextView c3Stab = eView.findViewById(R.id.c3Stab);
         //Button
         Button button1 = eView.findViewById(R.id.button1);
@@ -458,23 +469,17 @@ public class GameActivity extends AppCompatActivity {
 
         //Set text views text
         title.setText(e.getEventTitle());
-        //Dismissive
-        c1App.setText(String.format("%.0f", e.getDisEffectByIndex(0)) + "%");
-        c1Bud.setText("£" + String.format("%.0f", e.getDisEffectByIndex(1)));
-        c1Stab.setText(String.format("%.1f", e.getDisEffectByIndex(2)));
-        //Normal
-        c2App.setText(String.format("%.0f", e.getNormEffectByIndex(0)) + "%");
-        c2Bud.setText("£" + String.format("%.0f", e.getNormEffectByIndex(1)));
-        c2Stab.setText(String.format("%.1f",e.getNormEffectByIndex(2)));
-        //Extreme
-        c3App.setText(String.format("%.0f", e.getExtEffectByIndex(0)) + "%");
-        c3Bud.setText("£" + String.format("%.0f", e.getExtEffectByIndex(1)));
-        c3Stab.setText(String.format("%.1f",e.getExtEffectByIndex(2)));
+        //Approval
+        c1App.setText(String.format("%.0f", e.getEffectA()) + "%");
+        //Budget
+        c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
+        //Stability
+        c3Stab.setText(String.format("%.1f",e.getEffectS()));
 
         //Set Button Text
-        button1.setText(e.getDisChoice());
-        button2.setText(e.getNormChoice());
-        button3.setText(e.getExtChoice());
+        button1.setText(e.getChoiceA());
+        button2.setText(e.getChoiceB());
+        button3.setText(e.getChoiceS());
 
         choiceNumber = 0;
 
@@ -523,71 +528,39 @@ public class GameActivity extends AppCompatActivity {
 
     //Handle choice made
     private void getChoice(Event e) {
+        //Approval
         if (choiceNumber == 1) {
-            //Dismissive
-            changeResources(e.getDisEffects());
-            choiceText.setText(e.getDisChoice());
-            if(e.getDisEffectByIndex(0) == 0){
+            changeResources(e.getEffectA(), "Approval");
+            choiceText.setText(e.getChoiceA());
+            if(e.getEffectA() == 0){
                 appEffect.setText("None");
             } else {
-                appEffect.setText(String.valueOf(e.getDisEffectByIndex(0)));
+                appEffect.setText(String.valueOf(e.getEffectA()));
             }
-            if (e.getDisEffectByIndex(1) == 0){
-                budEffect.setText("None");
-            } else {
-                budEffect.setText(String.valueOf(e.getDisEffectByIndex(1)));
-            }
-            if (e.getDisEffectByIndex(2) == 0){
-                stabEffect.setText("None");
-            } else {
-                stabEffect.setText(String.format("%.1f", (e.getDisEffectByIndex(2))));
-            }
-
             choiceNumber = 0;
+
+        //Budget
         } else if (choiceNumber == 2) {
-            //Normal
-            changeResources(e.getNormEffects());
-            choiceText.setText(e.getNormChoice());
-
-            if(e.getNormEffectByIndex(0) == 0){
-                appEffect.setText("None");
-            } else {
-                appEffect.setText(String.valueOf(e.getNormEffectByIndex(0)));
-            }
-            if (e.getNormEffectByIndex(1) == 0){
+            changeResources(e.getEffectB(), "Budget");
+            choiceText.setText(e.getChoiceB());
+            if(e.getEffectB() == 0){
                 budEffect.setText("None");
             } else {
-                budEffect.setText(String.valueOf(e.getNormEffectByIndex(1)));
+                budEffect.setText(String.valueOf(e.getEffectB()));
             }
-            if (e.getNormEffectByIndex(2) == 0){
-                stabEffect.setText("None");
-            } else {
-                stabEffect.setText(String.format("%.1f", (e.getNormEffectByIndex(2))));
-            }
-
             choiceNumber = 0;
+
+        //Stability
         } else if (choiceNumber == 3) {
-            //Extreme
-            changeResources(e.getExtEffects());
-            choiceText.setText(e.getExtChoice());
-
-            if(e.getExtEffectByIndex(0) == 0){
-                appEffect.setText("None");
-            } else {
-                appEffect.setText(String.valueOf(e.getExtEffectByIndex(0)));
-            }
-            if (e.getExtEffectByIndex(1) == 0){
-                budEffect.setText("None");
-            } else {
-                budEffect.setText(String.valueOf(e.getExtEffectByIndex(1)));
-            }
-            if (e.getExtEffectByIndex(2) == 0){
+            changeResources(e.getEffectS(), "Stability");
+            choiceText.setText(e.getChoiceS());
+            if(e.getEffectS() == 0){
                 stabEffect.setText("None");
             } else {
-                stabEffect.setText(String.format("%.1f", (e.getExtEffectByIndex(2))));
+                stabEffect.setText(String.valueOf(e.getEffectS()));
             }
-
             choiceNumber = 0;
+
         } else {
             //Error
         }

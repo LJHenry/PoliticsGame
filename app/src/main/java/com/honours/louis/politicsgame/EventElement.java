@@ -10,14 +10,14 @@ public class EventElement {
 
     private String name;
     private String choice;
-    private double[] effects;
+    private double effect;
     private enum type {Object, Context, Subject}
     private type label;
 
-    public EventElement(String name, String choice, double[] effects, String label){
+    public EventElement(String name, String choice, double effect, String label){
         this.name = name;
         this.choice = choice;
-        this.effects = effects;
+        this.effect = effect;
         this.label = type.valueOf(label);
     }
 
@@ -30,13 +30,12 @@ public class EventElement {
         return this.choice;
     }
 
-    public double[] getEffects(){
-        return this.effects;
+    public double getEffect(){
+        return this.effect;
     }
-    public double getEffect(int i){return this.effects[i];}
-    public String getEffectsAsString(){
-        String s;
-        s = String.valueOf(effects[0]) + " " + String.valueOf(effects[1]) + " " + String.valueOf(effects[2]);
+
+    public String getEffectAsString(){
+        String s = String.valueOf(effect);
         return s;
     }
 
