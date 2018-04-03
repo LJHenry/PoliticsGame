@@ -78,6 +78,7 @@ public class Event {
         this.isNegative = true;
     }
 
+    //Return negativity
     public boolean isNegative(){
         if(isNegative)
             return true;

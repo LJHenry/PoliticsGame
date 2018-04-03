@@ -16,6 +16,8 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
+    //Training mode, uses percentages for easier choice making
+    boolean training = true;
 
     //Game loop
     private boolean gameOver;
@@ -227,9 +229,16 @@ public class GameActivity extends AppCompatActivity {
         dateBar.invalidate();
         dateText.setText(" Month:" + month + " Year:" + year);
         //Resources
-        appText.setText(String.format("%.0f", approval) + "%");
-        budText.setText("£" + String.format("%.0f", budget));
-        stabText.setText(String.format("%.1f", stability));
+        if(training){
+            appText.setText(String.format("%.1f", (approval/100) * 100) + "%");
+            budText.setText(String.format("%.1f", (budget/100000) * 100)  + "%");
+            stabText.setText(String.format("%.1f", (stability/5) * 100)  + "%");
+        } else {
+            appText.setText(String.format("%.0f", approval) + "%");
+            budText.setText("£" + String.format("%.0f", budget));
+            stabText.setText(String.format("%.1f", stability));
+        }
+
 
     }
 
@@ -461,12 +470,29 @@ public class GameActivity extends AppCompatActivity {
 
         //Set text views text
         title.setText(e.getEventTitle());
-        //Approval
-        c1App.setText(String.format("%.0f", e.getEffectA()) + "%");
-        //Budget
-        c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
-        //Stability
-        c3Stab.setText(String.format("%.1f",e.getEffectS()));
+
+        if(training){
+            //Output effects as a percentage
+            double a; double b; double s;
+            a = (e.getEffectA()/100) * 100;
+            b = (e.getEffectB()/100000) * 100;
+            s = (e.getEffectS()/5) * 100;
+            //Approval
+            c1App.setText(String.format("%.1f", a) + "%");
+            //Budget
+            c2Bud.setText(String.format("%.1f", b) + "%");
+            //Stability
+            c3Stab.setText(String.format("%.1f", s)+ "%");
+        } else {
+            //Approval
+            c1App.setText(String.format("%.0f", e.getEffectA()) + "%");
+            //Budget
+            c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
+            //Stability
+            c3Stab.setText(String.format("%.1f",e.getEffectS()));
+        }
+
+
 
         //Set Button Text
         button1.setText(e.getChoiceA());

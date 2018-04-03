@@ -57,7 +57,7 @@ public class EventSystem {
         //Initialise events
         pool = new EventPool();
         //Training events
-        t = new TrainingSuite();
+        //t = new TrainingSuite();
     }
 
     public void getGameState(double a, double b, double s, int c, boolean negative) {
@@ -75,7 +75,7 @@ public class EventSystem {
         //Calculate situation
         situation = getSituation();
         //Log game state
-        String state = getResourcePercentage() + "," + isNegative + "," + lastEffects + "," + choice + "\n";
+        String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
         log(state);
         //Remember last situation
         lastSituation = situation;
@@ -183,24 +183,15 @@ public class EventSystem {
     private Event getPremadeEvent(String label){
         Event e;
         e = pool.getEventByName(label);
-        lastEffects = getEffectsPercent(e);
+        //lastEffects = getEffectsPercent(e);
         return e;
     }
 
     //Get training event
     public Event getTrainingEvent(){
         Event e = t.getTrainingEvent();
-        lastEffects = getEffectsPercent(e);
+        //lastEffects = getEffectsPercent(e);
         return e;
-    }
-
-    //Log effects
-    private String getEffectsPercent(Event e){
-        double a; double b; double s;
-        a = (e.getEffectA()/100) * 100;
-        b = (e.getEffectB()/100000) * 100;
-        s = (e.getEffectS()/5) * 100;
-        return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
     private String getSituation() {
@@ -300,6 +291,15 @@ public class EventSystem {
         }
 
         return score;
+    }
+
+    //Log effects
+    private String getEffectsPercent(Event e){
+        double a; double b; double s;
+        a = (e.getEffectA()/100) * 100;
+        b = (e.getEffectB()/100000) * 100;
+        s = (e.getEffectS()/5) * 100;
+        return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
     //Difficulty modifier

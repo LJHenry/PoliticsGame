@@ -18,13 +18,6 @@ public class EventPool {
 
     //Make event - arguments allow control over all elements
     private Event makeEvent(String eventName, String obj, String objChoice, double a, String con, String conChoice, double b, String sub, String subChoice, double s){
-        //Choice effects
-        double approval = a;
-
-        double budget = b;
-
-        double stability = s;
-
         //Make event elements, Object, Context, Subject
         EventElement object = new EventElement(obj, objChoice, a, "Object");
         EventElement context = new EventElement(con, conChoice, b, "Context");
@@ -54,10 +47,6 @@ public class EventPool {
         poolA.add(makeEvent("ElectionClose", "Few Days", "We Will Win", 0, "Remain", "Rally Supporters", 0, "For Election Campaigns", "Grasp For Votes", 0));
     }
 
-    //TODO
-    //May need a 'used' list, ID event by number (as the name)
-    //Add event to list by ID when it is chosen, If event is chosen and matches ID in list do not use
-    //For this to work there must be enough events in the list to last maximum event number per game or no event will be selected
     private void fillPoolB(){
         /*
         poolB.add(makeEvent("None", "Opposition", "Divert Attention", 3, 0, -0.3, "Criticizes", "Counter Criticism", -5, 0, 0.2, "Housing Policy", "Review Policy", 6, -7500, -0.4));

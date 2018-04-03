@@ -70,35 +70,35 @@ public class TrainingSuite {
         if(tier == 1){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(1, 5);
+                i = ThreadLocalRandom.current().nextInt(0, 5)  + 1;
             } else if (choice == 2) {
                 //Budget
-                i = ThreadLocalRandom.current().nextInt(5000, 7500);
+                i = ThreadLocalRandom.current().nextInt(0, 5000)  + 2500;
             } else if (choice == 3) {
                 //Stability
-                i = ThreadLocalRandom.current().nextDouble(0.1, 0.25);
+                i = ThreadLocalRandom.current().nextDouble(0, 0.15) + 0.1;
             }
         } else if(tier == 2){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(5, 10);
+                i = ThreadLocalRandom.current().nextInt(5, 10)  + 1;
             } else if (choice == 2) {
                 //Budget
-                i = ThreadLocalRandom.current().nextInt(7500, 10000);
+                i = ThreadLocalRandom.current().nextInt(5000, 7500) + 2500;
             } else if (choice == 3) {
                 //Stability
-                i = ThreadLocalRandom.current().nextDouble(0.25, 0.35);
+                i = ThreadLocalRandom.current().nextDouble(0.15, 0.25) + 0.1;
             }
         } else if(tier == 3){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(10, 15);
+                i = ThreadLocalRandom.current().nextInt(9, 15) + 1;
             } else if (choice == 2) {
                 //Budget
-                i = ThreadLocalRandom.current().nextInt(10000, 12500);
+                i = ThreadLocalRandom.current().nextInt(7500, 10000)  + 2500;
             } else if (choice == 3) {
                 //Stability
-                i = ThreadLocalRandom.current().nextDouble(0.35, 0.5);
+                i = ThreadLocalRandom.current().nextDouble(0.25, 0.5) + 0.1;
             }
         }
 
