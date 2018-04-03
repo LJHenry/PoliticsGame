@@ -24,9 +24,14 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".HelpActivity" />
         <activity android:name=".InfoActivity" />
-        <activity android:name=".GameActivity"
+        <activity
+            android:name=".GameActivity"
+            android:noHistory="true"
             android:launchMode="singleTask" />
-        <activity android:name=".FinishActivity"></activity>
+        <activity
+            android:name=".FinishActivity"
+            android:noHistory="true" />
+        <activity android:name=".QActivity"></activity>
     </application>
 
 </manifest>

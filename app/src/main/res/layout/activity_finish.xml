@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="100dp"
         android:text="WinOrLose"
-        android:textSize="18sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,67 +39,15 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="8dp"
         android:text="Description"
         android:textAlignment="center"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonQ"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBarBudget"
-        app:layout_constraintVertical_bias="0.057" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:text="CountryName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textWinLose" />
-
-    <ProgressBar
-        android:id="@+id/progressBarStability"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:max="5"
-        app:layout_constraintEnd_toEndOf="@+id/textStabilityLeft"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/progressBarBudget"
-        app:layout_constraintTop_toTopOf="@+id/progressBarBudget" />
-
-    <ProgressBar
-        android:id="@+id/progressBarBudget"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:max="100000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textBudgetLeft" />
-
-    <ProgressBar
-        android:id="@+id/progressBarApproval"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:max="100"
-        app:layout_constraintEnd_toStartOf="@+id/progressBarBudget"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textApprovalLeft"
-        app:layout_constraintTop_toTopOf="@+id/progressBarBudget" />
+        app:layout_constraintTop_toBottomOf="@+id/textBudgetLeft"
+        app:layout_constraintVertical_bias="0.305" />
 
     <TextView
         android:id="@+id/textApprovalLeft"
@@ -107,7 +56,10 @@
         android:layout_marginEnd="88dp"
         android:layout_marginStart="32dp"
         android:text="TextView"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/textBudgetLeft"
+        app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textBudgetLeft" />
 
@@ -117,11 +69,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="84dp"
         android:text="TextView"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textWinLose" />
 
     <TextView
         android:id="@+id/textStabilityLeft"
@@ -130,8 +85,10 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="88dp"
         android:text="TextView"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.172"
+        app:layout_constraintHorizontal_bias="0.792"
         app:layout_constraintStart_toEndOf="@+id/textBudgetLeft"
         app:layout_constraintTop_toTopOf="@+id/textBudgetLeft" />
 </android.support.constraint.ConstraintLayout>

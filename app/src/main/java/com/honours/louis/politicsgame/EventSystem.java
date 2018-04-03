@@ -48,29 +48,36 @@ public class EventSystem {
 
     public EventSystem(Context context, String cn, int gt, String e) {
         c = context.getApplicationContext();
+        //Parameters to send for new log entry
         countryName = cn;
         govType = gt;
         engagement = e;
-        startEventCount = 0;
+        //Name of log file
         logFilename = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
+        //Initialise events
         pool = new EventPool();
+        //Training events
         t = new TrainingSuite();
     }
 
     public void getGameState(double a, double b, double s, int c, boolean negative) {
+        //Resources
         approval = a;
         budget = b;
         stability = s;
+        //Choice and event
         choice = c;
         if (negative) {
             isNegative = "negative";
         } else {
             isNegative = "positive";
         }
+        //Calculate situation
         situation = getSituation();
+        //Log game state
         String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
         log(state);
-        new SendToServer().execute(logFilename);
+        //Remember last situation
         lastEventSituation = situation;
     }
 
@@ -298,42 +305,5 @@ public class EventSystem {
     //Get choice effects
     //Check against label
     //Apply modifier based on game state
-
-    // ----- UPLOAD LOG FILE -----
-    private static class SendToServer extends AsyncTask<String, Void, String> {
-
-        //Uploads to 000webhost server via FTP
-        //Apache Commons Net Jar provides FTP Client functionality
-        protected String doInBackground(String... params) {
-
-            String filename = params[0];
-            FTPClient con;
-
-            try {
-                con = new FTPClient();
-                con.connect("files.000webhost.com");
-
-                if (con.login("politicsgamedatabase", "qq6k^7x5WbVOPcw!zL)O")) {
-                    con.enterLocalPassiveMode(); // Important!
-                    con.setFileType(FTP.BINARY_FILE_TYPE);
-                    File data = new File("data/data/com.honours.louis.politicsgame/files/" + filename);
-                    FileInputStream in = new FileInputStream(data);
-                    boolean result = con.storeFile(filename, in);
-                    in.close();
-                    if (result) Log.v("Log File Upload", "Success");
-                    con.logout();
-                    con.disconnect();
-                    return "Success";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return "Failure";
-        }
-
-        protected void onPostExecute() {
-            //Must be Implemented
-        }
-    }
 }
 

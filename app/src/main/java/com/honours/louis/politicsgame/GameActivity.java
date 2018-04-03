@@ -193,10 +193,10 @@ public class GameActivity extends AppCompatActivity {
         if(approval >= 40){
             score += 1;
         }
-        if(budget >= 15000){
+        if(budget >= 20000){
             score += 1;
         }
-        if(stability >= 3){
+        if(stability >= 2.5){
             score += 1;
         }
         return score;
@@ -581,7 +581,7 @@ public class GameActivity extends AppCompatActivity {
     //Handle back button
     @Override
     public void onBackPressed(){
-
+        paused = true;
         //Confirmation dialogue
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -593,6 +593,7 @@ public class GameActivity extends AppCompatActivity {
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         //Do nothing
+                        paused = false;
                         break;
                 }
             }

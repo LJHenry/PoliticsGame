@@ -1,6 +1,7 @@
 package com.honours.louis.politicsgame;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +18,6 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
     TextView stability;
     TextView description;
 
-    ProgressBar appLeft;
-    ProgressBar budLeft;
-    ProgressBar stabLeft;
-
     double a;
     double b;
     double s;
@@ -32,6 +29,7 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
 
         //Button
         Button question = findViewById(R.id.buttonQ);
+        question.setOnClickListener(this);
 
         //TextViews
         winLoss = findViewById(R.id.textWinLose);
@@ -39,11 +37,6 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
         budget = findViewById(R.id.textBudgetLeft);
         stability = findViewById(R.id.textStabilityLeft);
         description = findViewById(R.id.textGameDescription);
-
-        //Bars
-        appLeft = findViewById(R.id.progressBarApproval);
-        budLeft = findViewById(R.id.progressBarBudget);
-        stabLeft = findViewById(R.id.progressBarStability);
 
         a = getIntent().getDoubleExtra("Approval", 0);
         b = getIntent().getDoubleExtra("Budget", 0);
@@ -67,11 +60,6 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
         approval.setText((String.format("%.0f", a)));
         budget.setText((String.format("%.0f", b)));
         stability.setText((String.format("%.1f", s)));
-
-        appLeft.setProgress(((int) a));
-        budLeft.setProgress(((int) b));
-        stabLeft.setProgress(((int) s));
-
     }
 
     private void getDescription(boolean win){
@@ -93,7 +81,7 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
     private String getConditions(){
         if(a > 60 && s > 4 && b > 35000){
             return "a landslide victory!";
-        } else if(a < 60 && a > 45 && s > 3 && b > 25000){
+        } else if(a < 60 && a > 45 && s > 2.5 && b >= 20000){
             return "hard fought and well won.";
         }
         return "very close. You won the battles for votes in key areas.";
@@ -104,7 +92,8 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.buttonQ:
                 //Start Questionnaire Activity
-
+                Intent i = new Intent(FinishActivity.this, QActivity.class);
+                startActivity(i);
                 break;
         }
     }

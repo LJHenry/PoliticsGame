@@ -72,6 +72,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
         builder.setView(eView);
         alertDialog = builder.create();
 
+        //Spinner
         final Spinner answerSpinner = eView.findViewById(R.id.spinnerNumber);
         ArrayAdapter<CharSequence> answerAdapter = ArrayAdapter.createFromResource(this, R.array.engagement, android.R.layout.simple_spinner_item);
         answerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
