@@ -135,7 +135,7 @@ public class TrainingSuite {
     }
 
     private boolean negativeChance(){
-        if(ThreadLocalRandom.current().nextInt(1, 6) < 4){
+        if(ThreadLocalRandom.current().nextInt(0, 9) < 5){
             return true;
         }
         return false;

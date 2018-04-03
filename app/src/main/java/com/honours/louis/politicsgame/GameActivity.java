@@ -225,7 +225,7 @@ public class GameActivity extends AppCompatActivity {
         //Date
         dateBar.setProgress(dayTotal);
         dateBar.invalidate();
-        dateText.setText("D:" + day + " M:" + month + " Y:" + year);
+        dateText.setText(" Month:" + month + " Year:" + year);
         //Resources
         appText.setText(String.format("%.0f", approval) + "%");
         budText.setText("£" + String.format("%.0f", budget));
@@ -387,19 +387,17 @@ public class GameActivity extends AppCompatActivity {
             //Normal Event
             if(!flag){
                 //Training Event
-                e = eventSystem.t.getTrainingEvent();
+                e = eventSystem.getTrainingEvent();
+
+                //Debug show Stability percentage
+                Toast.makeText(getApplicationContext(), String.format("%.0f", stability/5*100), Toast.LENGTH_SHORT).show();
 
                 //Random premade event
                 //e = eventSystem.getPremadeEvent("None", true);
             }
-
-            //AI Event
-            if(flag){
-                //Feed game state
-            }
         } else {
             //Get Premade Event Using Name, Override Event lock
-            e = eventSystem.getPremadeEvent(name, false);
+            e = eventSystem.findPremadeEvent(name, false);
             eventName = null;
         }
 
@@ -568,11 +566,11 @@ public class GameActivity extends AppCompatActivity {
         Event e = new Event();
 
         if(day == 4){
-            e = eventSystem.getPremadeEvent("GameStart", false);
+            e = eventSystem.findPremadeEvent("GameStart", false);
         } else if (day == 6){
-            e = eventSystem.getPremadeEvent("Example", false);
+            e = eventSystem.findPremadeEvent("Example", false);
         } else if (day == 8) {
-            e = eventSystem.getPremadeEvent("Resources", false);
+            e = eventSystem.findPremadeEvent("Resources", false);
         }
 
         return e;

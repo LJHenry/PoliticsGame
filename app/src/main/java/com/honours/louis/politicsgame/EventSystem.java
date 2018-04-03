@@ -35,16 +35,16 @@ public class EventSystem {
     private int year;
     private String situation;
     private int choice;
-    private String lastEventSituation;
+    private String lastSituation;
+    private String lastEffects;
     private String isNegative;
     //Event Pool
     private EventPool pool;
     //Log File
     private String logFilename; //Will use devices Android id - unique and recommended secure ID method by Google
     private Context c;
-    private int startEventCount;
     //AI Training
-    public TrainingSuite t;
+    private TrainingSuite t;
 
     public EventSystem(Context context, String cn, int gt, String e) {
         c = context.getApplicationContext();
@@ -75,10 +75,10 @@ public class EventSystem {
         //Calculate situation
         situation = getSituation();
         //Log game state
-        String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
+        String state = getResourcePercentage() + "," + isNegative + "," + lastEffects + "," + choice + "\n";
         log(state);
         //Remember last situation
-        lastEventSituation = situation;
+        lastSituation = situation;
     }
 
     //Get resources as percentage(string)
@@ -93,10 +93,7 @@ public class EventSystem {
         //% of stability
         double s = (stability/5) * 100;
 
-        //Round values
-
-
-        return String.format("%.0f", a) + "," + String.format("%.0f", b) + "," + String.format("%.0f", s);
+        return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
 
@@ -105,7 +102,7 @@ public class EventSystem {
         FileOutputStream outputStream;
         try {
             outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
-            if (lastEventSituation == null) {
+            if (lastSituation == null) {
                 outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
             }
             outputStream.write(state.getBytes());
@@ -129,16 +126,15 @@ public class EventSystem {
         stability = s;
         day = d;
         year = y;
-        lastEventSituation = l;
+        lastSituation = l;
 
         //String label = getSituation();
 
         //Do relevant stuff
     }
 
-    //Get premade event from pools
-    public Event getPremadeEvent(String label, boolean random) {
-
+    //Find event in pool
+    public Event findPremadeEvent(String label, boolean random) {
         if (random) {
             //Pool B - Random
             return pool.getEvent();
@@ -148,51 +144,63 @@ public class EventSystem {
             switch (label) {
                 case "GameStart":
                     //Welcome
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "Example":
                     //Event Example
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "Resources":
                     //Resources Description
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "ElectionWarning":
                     //Election Primer Event
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "BeginCampaign":
                     //Start of Campaign
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "OppositionCampaign":
                     //opposition start Campaign
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "ElectionProgress":
                     //Election Progresses
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "ElectionTwist":
                     //Twist in Election
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "ElectionLoosing":
                     //Player is likely to loose
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 case "ElectionClose":
                     //Election is about to occur
-                    return pool.getEventByName(label);
+                    return getPremadeEvent(label);
                 default:
                     break;
             }
-
-            //Election
-            //Starter
-
-            //Campaign Events
-
-            //Getting closer Event
-
-            //Last Ditch
-
-            //Election
-
         }
         return null;
+    }
+
+    //Fetch event from pool
+    private Event getPremadeEvent(String label){
+        Event e;
+        e = pool.getEventByName(label);
+        lastEffects = getEffectsPercent(e);
+        return e;
+    }
+
+    //Get training event
+    public Event getTrainingEvent(){
+        Event e = t.getTrainingEvent();
+        lastEffects = getEffectsPercent(e);
+        return e;
+    }
+
+    //Log effects
+    private String getEffectsPercent(Event e){
+        double a; double b; double s;
+        a = (e.getEffectA()/100) * 100;
+        b = (e.getEffectB()/100000) * 100;
+        s = (e.getEffectS()/5) * 100;
+        return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
     private String getSituation() {
@@ -270,9 +278,9 @@ public class EventSystem {
             score += 10;
         }
 
-        if (lastEventSituation != null) {
+        if (lastSituation != null) {
             //Add a percentage of the score depending on the last events label
-            switch (lastEventSituation) {
+            switch (lastSituation) {
                 case "Low":
                     score += (score / 100);
                     break;
