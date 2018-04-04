@@ -121,9 +121,9 @@ public class GameActivity extends AppCompatActivity {
         stabBonus = stabBonus / 10;
 
         //Set Starting Resources - 50%
-        approval += appBonus + 25;
-        budget += budBonus += 25000;
-        stability = stabBonus += 1.5;
+        approval += appBonus + 50;
+        budget += budBonus += 50000;
+        stability = stabBonus += 2.5;
 
         //Events
         eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"));
