@@ -17,7 +17,7 @@ public class EventPool {
     }
 
     //Make event - arguments allow control over all elements
-    private Event makeEvent(String eventName, String obj, String objChoice, double a, String con, String conChoice, double b, String sub, String subChoice, double s){
+    private Event makeEvent(String eventName, String obj, String objChoice, double a, String con, String conChoice, double b, String sub, String subChoice, double s, boolean negative){
         //Make event elements, Object, Context, Subject
         EventElement object = new EventElement(obj, objChoice, a, "Object");
         EventElement context = new EventElement(con, conChoice, b, "Context");
@@ -27,6 +27,10 @@ public class EventPool {
         Event e = new Event(object, context, subject);
         //Set name
         e.setEventName(eventName);
+        //Make negative
+        if(negative){
+            e.setNegative();
+        }
 
         return e;
 
@@ -34,17 +38,17 @@ public class EventPool {
 
     private void fillPoolA(){
         //Intro
-        poolA.add(makeEvent("GameStart", "Welcome", "Ok", 0,"To", "Ok", 0, "Politics Game", "Ok",0));
-        poolA.add(makeEvent("Example", "Events", "You Must", 0, "Appear", "Make", 0,"Here", "A Choice",0));
-        poolA.add(makeEvent("Resources", "Balance", "Approval", 0, "Your", "Budget", 0, "Resources", "Stability",0));
+        poolA.add(makeEvent("GameStart", "Welcome", "Ok", 0,"To", "Ok", 0, "Politics Game", "Ok",0, false));
+        poolA.add(makeEvent("Example", "Events", "You Must", 0, "Appear", "Make", 0,"Here", "A Choice",0, false));
+        poolA.add(makeEvent("Resources", "Balance", "Approval", 0, "Your", "Budget", 0, "Resources", "Stability",0, false));
         //Election
-        poolA.add(makeEvent("ElectionWarning", "General Election", "Make Party Speech", 5, "To Be Held", "Strategize Campaign", 0, "Soon", "Raise Funds", 0));
-        poolA.add(makeEvent("BeginCampaign", "Government", "Focus on People", 4, "Begins", "Focus on Economy", 4, "Election Campaign", "Focus on Party Issues",0));
-        poolA.add(makeEvent("OppositionCampaign", "Opposition", "Criticise Policies", 2, "Begins", "Release Sound Bites", 2, "Election Campaign", "Counter Campaign", 4));
-        poolA.add(makeEvent("ElectionProgress", "Election Campaigns", "Ease Funding", 0, "Make Progress", "Continue Funding", 1, "Around the Country", "Increase Funding", 4));
-        poolA.add(makeEvent("ElectionTwist", "Opposition", "Ignore Them", -8, "Targets", "Change Focus Areas", 4, "Government Weaknesses", "Aggressive Campaigning", 10));
+        poolA.add(makeEvent("ElectionWarning", "General Election", "Make a Speech", 5, "To Be Held", "Hold Fundraiser", 7500, "Soon", "Organise Party", 0.25, false));
+        poolA.add(makeEvent("BeginCampaign", "The Government", "Focus on People", 10, "Begin", "Focus on Economy", 7500, "Their Election Campaign", "Focus on Parliament",0.3, false));
+        poolA.add(makeEvent("OppositionCampaign", "The Opposition", "Battle in Parliament", -12, "Begin", "Fund our Campaign", -12500, "Their Election Campaign", "Battle on the Streets", -0.4, true));
+        poolA.add(makeEvent("ElectionProgress", "Government", "Rally Supporters", 6, "Election Campaign", "Raise more Funds", 5000, "Makes Progress", "Increase Funding", 0.3, false));
+        poolA.add(makeEvent("ElectionTwist", "Opposition", "Stick to the Plan", -10, "Increase Campaigning", "Focus in These Areas", -7500, "At Critical Voting Areas", "Defend Them Immediately", -0.5, true));
         // -- BROKEN --poolA.add(makeEvent("ElectionLosing", "Opposition", "Focus on Party", 0, 0, 0.5, "Surging Ahead", "Make Keynote Speech", 8, 0, 0, "In Latest Polls", "Hold Fundraiser",0, 10000, 0));
-        poolA.add(makeEvent("ElectionClose", "Few Days", "We Will Win", 0, "Remain", "Rally Supporters", 0, "For Election Campaigns", "Grasp For Votes", 0));
+        poolA.add(makeEvent("ElectionClose", "Election Day", "Go Door to Door", 5, "is Almost", "Scrounge Funds", 5000, "Here", "Confide with MP's", 0.2, false));
     }
 
     private void fillPoolB(){

@@ -57,7 +57,9 @@ public class EventSystem {
         //Initialise events
         pool = new EventPool();
         //Training events
-        //t = new TrainingSuite();
+        t = new TrainingSuite();
+        //////////////
+        deleteLog();
     }
 
     public void getGameState(double a, double b, double s, int c, boolean negative) {

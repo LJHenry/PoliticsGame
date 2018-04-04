@@ -17,7 +17,7 @@ import java.util.Random;
 public class GameActivity extends AppCompatActivity {
 
     //Training mode, uses percentages for easier choice making
-    boolean training = true;
+    boolean training = false;
 
     //Game loop
     private boolean gameOver;
@@ -121,10 +121,9 @@ public class GameActivity extends AppCompatActivity {
         stabBonus = stabBonus / 10;
 
         //Set Starting Resources - 50%
-        approval += appBonus + 50;
-        budget += budBonus += 50000;
-
-        stability = stabBonus += 2.5;
+        approval += appBonus + 25;
+        budget += budBonus += 25000;
+        stability = stabBonus += 1.5;
 
         //Events
         eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"));
@@ -395,14 +394,18 @@ public class GameActivity extends AppCompatActivity {
         if (name == null){
             //Normal Event
             if(!flag){
-                //Training Event
-                e = eventSystem.getTrainingEvent();
+                if(training){
+                    //Training Event
+                    e = eventSystem.getTrainingEvent();
+                } else {
+                    //Random premade event
+                    e = eventSystem.findPremadeEvent("None", true);
+                }
 
                 //Debug show Stability percentage
                 Toast.makeText(getApplicationContext(), String.format("%.0f", stability/5*100), Toast.LENGTH_SHORT).show();
 
-                //Random premade event
-                //e = eventSystem.getPremadeEvent("None", true);
+
             }
         } else {
             //Get Premade Event Using Name, Override Event lock
