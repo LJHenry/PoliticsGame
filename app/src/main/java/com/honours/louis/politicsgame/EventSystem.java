@@ -1,50 +1,48 @@
 package com.honours.louis.politicsgame;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.provider.Settings;
-import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
+import com.honours.louis.politicsgame.org.pielot.rf.PoliticsGameRandomForest;
+import com.honours.louis.politicsgame.org.pielot.rf.Prediction;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.DecimalFormat;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * System will take game parameters and produce a suitable event.
+ * Logs game situation and calculates situation score.
  * Will be manipulated by the AI.
  * Created by Louis Henry.
  */
 
 public class EventSystem {
 
+    //Specifics
     private String countryName;
     private int govType;
     private String engagement;
+    //Resources
     private double approval;
     private double budget;
     private double stability;
+    //Game Situation
     private int day;
     private int year;
     private String situation;
-    private int choice;
     private String lastSituation;
+    //Event
+    private int choice;
     private String lastEffects;
     private String isNegative;
-    //Event Pool
     private EventPool pool;
     //Log File
-    private String logFilename; //Will use devices Android id - unique and recommended secure ID method by Google
+    private String logFilename; //Device Android ID - unique and recommended secure ID method by Google
     private Context c;
-    //AI Training
+    //AI
     private TrainingSuite t;
+    private PoliticsGameRandomForest rf;
+    private boolean flagUseAi; //If false AI will not be used
 
     public EventSystem(Context context, String cn, int gt, String e) {
         c = context.getApplicationContext();
@@ -58,6 +56,8 @@ public class EventSystem {
         pool = new EventPool();
         //Training events
         t = new TrainingSuite();
+        //Random Forest
+        rf = new PoliticsGameRandomForest();
     }
 
     public void getGameState(double a, double b, double s, int c, boolean negative) {
@@ -73,7 +73,7 @@ public class EventSystem {
             isNegative = "positive";
         }
         //Calculate situation
-        situation = getSituation();
+        //situation = getSituation();
         //Log game state
         String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
         log(state);
@@ -96,6 +96,20 @@ public class EventSystem {
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
+    /*
+    //Get choice as a word
+    private String getChoiceAsWord(int c){
+        String s = "";
+        if(c == 1){
+            s = "one";
+        } else if(c == 2){
+            s = "two";
+        } else if(c == 3){
+            s = "three";
+        }
+        return s;
+    }
+    */
 
     //Write out game state to log - INTERNAL PRIVATE STORAGE
     private void log(String state) {
@@ -103,7 +117,7 @@ public class EventSystem {
         try {
             outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
             if (lastSituation == null) {
-                outputStream.write(("NEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
+                outputStream.write(("\nNEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
             }
             outputStream.write(state.getBytes());
             outputStream.close();
@@ -189,8 +203,14 @@ public class EventSystem {
 
     //Get training event
     public Event getTrainingEvent(){
+        //Get event
         Event e = t.getTrainingEvent();
-        //lastEffects = getEffectsPercent(e);
+        //Predict choice
+        String choice = getPrediction(approval, budget, stability, isNegative);
+        modifyEffectBySituation(e, choice);
+        //DEBUG - Output
+        Toast toast = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+        toast.show();
         return e;
     }
 
@@ -294,18 +314,55 @@ public class EventSystem {
     }
 
     //Log effects
-    private String getEffectsPercent(Event e){
+    private String getEffectsAmount(Event e){
+        //Get Percentage
         double a; double b; double s;
         a = (e.getEffectA()/100) * 100;
         b = (e.getEffectB()/100000) * 100;
         s = (e.getEffectS()/5) * 100;
+
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
-    //Difficulty modifier
-    //Run event through AI choice prediction
-    //Given prediction modify numbers
-    //Aim to change the choice made
+    //Run situation through AI choice prediction
+    private String getPrediction(double approval, double budget, double stability, String type){
+        //Update fields with game state
+        rf.updateFields(approval, budget, stability, type);
+        //Run classification to get prediction
+        Prediction p = rf.runClassification();
+        //Return the prediction as String
+        return p.label;
+    }
+
+    //Modify the effect of the choice predicted by the classifier
+    private void modifyEffectBySituation(Event e, String choice){
+        double modifier  = 0;
+
+        //Get game situation
+        switch (getSituation()){
+            case "Low":
+                modifier = 1.75;
+                break;
+            case "Moderate":
+                modifier = 1.50;
+                break;
+            case "Substantial":
+                modifier = 1.35;
+                break;
+            case "Severe":
+                modifier = 1.25;
+                break;
+            case "Critical":
+                modifier = 1.15;
+                break;
+        }
+
+        //Get predicted effect
+        double effect = e.getEffectByLabel(choice);
+        //Apply modifier
+        effect = effect * modifier;
+        e.setEffect(choice, effect);
+    }
 
     //---Dynamic Generation---
     //Look up keyword table

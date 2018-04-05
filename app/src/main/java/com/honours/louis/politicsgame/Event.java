@@ -86,10 +86,27 @@ public class Event {
         return false;
     }
 
+    //Get effect by string 1, 2, 3
+    public double getEffectByLabel(String label){
+        if(label == "1"){
+            return this.getEffectA();
+        } else if(label == "2"){
+            return this.getEffectB();
+        } else if(label == "3") {
+            return this.getEffectS();
+        }
+        return 0;
+    }
 
-
-
-
-
+    //Modify effect by string 1, 2, 3
+    public void setEffect(String effect, double value){
+        if(effect == "1"){
+            this.eventObj.setEffect(value);
+        } else if(effect == "2"){
+            this.eventCon.setEffect(value);
+        } else if(effect == "3") {
+            this.eventSub.setEffect(value);
+        }
+    }
 
 }

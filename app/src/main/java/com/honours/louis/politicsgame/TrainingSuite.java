@@ -9,13 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TrainingSuite {
 
-    private double difficulty;
-
-    public TrainingSuite(){
-        //Set factor positive effects are reduced by
-        difficulty = 1.25;
-    }
-
     public Event getTrainingEvent() {
         //Create an event for training
         //Random positive and negative values in a boundary for each choice
@@ -39,9 +32,9 @@ public class TrainingSuite {
         }
 
         //Round
-        round(app, 1);
-        round(bud, 2 );
-        round(stab, 3);
+        app = round(app, 1);
+        bud = round(bud, 2 );
+        stab = round(stab, 3);
 
         EventElement a = new EventElement("Training Event", "Approval", app, "Object");
         EventElement b = new EventElement("Created by", "Budget", bud, "Context");
@@ -70,7 +63,7 @@ public class TrainingSuite {
         if(tier == 1){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(0, 5)  + 1;
+                i = ThreadLocalRandom.current().nextInt(1, 5);
             } else if (choice == 2) {
                 //Budget
                 i = ThreadLocalRandom.current().nextInt(0, 5000)  + 2500;
@@ -81,7 +74,7 @@ public class TrainingSuite {
         } else if(tier == 2){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(5, 10)  + 1;
+                i = ThreadLocalRandom.current().nextInt(5, 10);
             } else if (choice == 2) {
                 //Budget
                 i = ThreadLocalRandom.current().nextInt(5000, 7500) + 2500;
@@ -92,7 +85,7 @@ public class TrainingSuite {
         } else if(tier == 3){
             if (choice == 1) {
                 //Approval
-                i = ThreadLocalRandom.current().nextInt(9, 15) + 1;
+                i = ThreadLocalRandom.current().nextInt(9, 15);
             } else if (choice == 2) {
                 //Budget
                 i = ThreadLocalRandom.current().nextInt(7500, 10000)  + 2500;
@@ -128,9 +121,7 @@ public class TrainingSuite {
             DecimalFormat df = new DecimalFormat("#.#");
             String s = df.format(effect);
             effect = Double.parseDouble(s);
-            Log.d("TRAINING SUITE", "Stability value: " + effect);
         }
-
         return effect;
     }
 

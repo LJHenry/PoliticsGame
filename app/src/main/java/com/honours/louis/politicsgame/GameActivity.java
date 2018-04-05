@@ -17,7 +17,7 @@ import java.util.Random;
 public class GameActivity extends AppCompatActivity {
 
     //Training mode, uses percentages for easier choice making
-    boolean training = false;
+    boolean training = true;
 
     //Game loop
     private boolean gameOver;
@@ -229,9 +229,9 @@ public class GameActivity extends AppCompatActivity {
         dateText.setText(" Month:" + month + " Year:" + year);
         //Resources
         if(training){
-            appText.setText(String.format("%.1f", (approval/100) * 100) + "%");
-            budText.setText(String.format("%.1f", (budget/100000) * 100)  + "%");
-            stabText.setText(String.format("%.1f", (stability/5) * 100)  + "%");
+            appText.setText(String.format("%.2f", (approval/100) * 100) + "%");
+            budText.setText(String.format("%.2f", (budget/100000) * 100)  + "%");
+            stabText.setText(String.format("%.2f", (stability/5) * 100)  + "%");
         } else {
             appText.setText(String.format("%.0f", approval) + "%");
             budText.setText("£" + String.format("%.0f", budget));
@@ -401,11 +401,6 @@ public class GameActivity extends AppCompatActivity {
                     //Random premade event
                     e = eventSystem.findPremadeEvent("None", true);
                 }
-
-                //Debug show Stability percentage
-                Toast.makeText(getApplicationContext(), String.format("%.0f", stability/5*100), Toast.LENGTH_SHORT).show();
-
-
             }
         } else {
             //Get Premade Event Using Name, Override Event lock
@@ -481,11 +476,11 @@ public class GameActivity extends AppCompatActivity {
             b = (e.getEffectB()/100000) * 100;
             s = (e.getEffectS()/5) * 100;
             //Approval
-            c1App.setText(String.format("%.1f", a) + "%");
+            c1App.setText(String.format("%.2f", a) + "%");
             //Budget
-            c2Bud.setText(String.format("%.1f", b) + "%");
+            c2Bud.setText(String.format("%.2f", b) + "%");
             //Stability
-            c3Stab.setText(String.format("%.1f", s)+ "%");
+            c3Stab.setText(String.format("%.2f", s)+ "%");
         } else {
             //Approval
             c1App.setText(String.format("%.0f", e.getEffectA()) + "%");
@@ -615,8 +610,10 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int c) {
                 switch (c) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        //Call super on back pressed to exit activity
+                        //Send to questionnaire
+                        Intent i = new Intent(GameActivity.this, QActivity.class);
                         GameActivity.super.onBackPressed();
+                        startActivity(i);
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         //Do nothing
@@ -627,7 +624,7 @@ public class GameActivity extends AppCompatActivity {
         };
 
         android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(this);
-        b.setMessage("Return to main menu? The game will end.").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+        b.setMessage("End the game? You will be taken to the evaluation questionnaire?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
     }
 
     public void endGame(){

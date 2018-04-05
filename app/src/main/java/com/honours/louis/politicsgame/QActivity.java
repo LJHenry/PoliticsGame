@@ -149,13 +149,13 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         @Override
         protected void onPreExecute() {
             progress = new ProgressDialog(QActivity.this);
-            progress.setMessage("Sending...");
+            progress.setMessage("Sending... (Server may be slow. Please Wait.)");
             progress.setCancelable(false);
             progress.show();
         }
 
 
-        //Uploads to 000webhost server via FTP
+        //Uploads to Hostinger file server via FTP
         //Apache Commons Net Jar provides FTP Client functionality
         protected String doInBackground(String... params) {
 
@@ -164,9 +164,9 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
 
             try {
                 con = new FTPClient();
-                con.connect("files.000webhost.com");
+                con.connect("ftp.politicsgame.xyz");
 
-                if (con.login("politicsgamedatabase", "qq6k^7x5WbVOPcw!zL)O")) {
+                if (con.login("u279076413", "uQhL9lfZ8kL6JV")) {
                     con.enterLocalPassiveMode(); // Important!
                     con.setFileType(FTP.BINARY_FILE_TYPE);
                     File data = new File("data/data/com.honours.louis.politicsgame/files/" + filename);

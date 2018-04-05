@@ -21,6 +21,11 @@ public class EventElement {
         this.label = type.valueOf(label);
     }
 
+    //Setter
+    public void setEffect(double value){
+        this.effect = value;
+    }
+
     //Getters
     public String getName(){
         return this.name;
