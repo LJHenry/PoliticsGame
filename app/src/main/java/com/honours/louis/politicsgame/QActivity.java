@@ -106,6 +106,25 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    //Handle back button
+    @Override
+    public void onBackPressed(){
+        //Alert dialogue
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int c) {
+                switch (c) {
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        //Stay in activity
+                        break;
+                }
+            }
+        };
+
+        android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(this);
+        b.setMessage("Please fill out the questionnaire. If you exit now no evaluation data will be sent.").setNeutralButton("Okay", dialogClickListener).show();
+    }
+
     private String getAnswers(){
         //SeekBar index 0-4 so add 1 to get 1-5
         answer1 = q1.getProgress() + 1;

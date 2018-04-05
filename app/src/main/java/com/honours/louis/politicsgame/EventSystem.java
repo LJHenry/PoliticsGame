@@ -44,7 +44,7 @@ public class EventSystem {
     private PoliticsGameRandomForest rf;
     private boolean flagUseAi; //If false AI will not be used
 
-    public EventSystem(Context context, String cn, int gt, String e) {
+    public EventSystem(Context context, String cn, int gt, String e, boolean useAi) {
         c = context.getApplicationContext();
         //Parameters to send for new log entry
         countryName = cn;
@@ -57,7 +57,10 @@ public class EventSystem {
         //Training events
         t = new TrainingSuite();
         //Random Forest
-        rf = new PoliticsGameRandomForest();
+        flagUseAi = useAi;
+        if(flagUseAi){
+            rf = new PoliticsGameRandomForest();
+        }
     }
 
     public void getGameState(double a, double b, double s, int c, boolean negative) {
@@ -197,20 +200,27 @@ public class EventSystem {
     private Event getPremadeEvent(String label){
         Event e;
         e = pool.getEventByName(label);
-        //lastEffects = getEffectsPercent(e);
+        if(flagUseAi){
+            //Predict choice
+            String choice = getPrediction(approval, budget, stability, isNegative);
+            modifyEffectBySituation(e, choice);
+        }
         return e;
     }
 
     //Get training event
     public Event getTrainingEvent(){
         //Get event
-        Event e = t.getTrainingEvent();
-        //Predict choice
-        String choice = getPrediction(approval, budget, stability, isNegative);
-        modifyEffectBySituation(e, choice);
-        //DEBUG - Output
-        Toast toast = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
-        toast.show();
+        Event e = t.getTrainingEvent(getSituation());
+        if(flagUseAi){
+            //Predict choice
+            String choice = getPrediction(approval, budget, stability, isNegative);
+            modifyEffectBySituation(e, choice);
+
+            //DEBUG - Output
+            Toast toast = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+            toast.show();
+        }
         return e;
     }
 
@@ -222,23 +232,23 @@ public class EventSystem {
         //Closer to election score is naturally higher
 
         String label = "Critical"; //Only stays as this if score is over 40 = critical
-        int score = 0;
+        double score = 0;
 
         score = calculateScore();
 
-        if (score <= 9) {
+        if (score <= 10) {
             //Low
             label = "Low";
-        } else if (score <= 19) {
+        } else if (score <= 20) {
             //Moderate
             label = "Moderate";
-        } else if (score <= 29) {
+        } else if (score <= 30) {
             //Substantial
             label = "Substantial";
-        } else if (score <= 39) {
+        } else if (score <= 40) {
             //Severe
             label = "Severe";
-        } else if (score <= 40) {
+        } else if (score <= 50) {
             //Critical
             label = "Critical";
         }
@@ -247,9 +257,9 @@ public class EventSystem {
     }
 
     //Add up score based on game situation - higher = worse situation
-    private int calculateScore() {
+    private double calculateScore() {
 
-        int score = 0;
+        double score = 0;
 
         //Check time remaining till election (end year 4)
         if (year == 4) {
@@ -269,24 +279,36 @@ public class EventSystem {
         //Check 3 Resources for closeness to 0
 
         //Approval
-        if (approval < 30) {
+        if (approval < 20) {
             score += 20;
         } else if (approval < 40) {
+            score += 15;
+        } else if (approval < 60){
             score += 10;
+        } else if(approval < 80){
+            score += 5;
         }
 
         //Budget
-        if (budget < 25000) {
+        if (budget < 20000) {
             score += 20;
-        } else if (budget < 35000) {
+        } else if (budget < 40000) {
+            score += 15;
+        } else if (budget < 60000){
             score += 10;
+        } else if(budget < 80000){
+            score += 5;
         }
 
         //Stability
-        if (stability < 1.5) {
+        if (stability < 1) {
             score += 20;
         } else if (stability < 2) {
+            score += 15;
+        } else if (stability < 3){
             score += 10;
+        } else if(stability < 4){
+            score += 5;
         }
 
         if (lastSituation != null) {
@@ -296,16 +318,16 @@ public class EventSystem {
                     score += (score / 100);
                     break;
                 case "Moderate":
-                    score += (score / 100 * 4);
+                    score += (score / 100 * 5);
                     break;
                 case "Substantial":
-                    score += (score / 100 * 6);
-                    break;
-                case "Severe":
                     score += (score / 100 * 10);
                     break;
-                case "Critical":
+                case "Severe":
                     score += (score / 100 * 15);
+                    break;
+                case "Critical":
+                    score += (score / 100 * 20);
                     break;
             }
         }
@@ -364,11 +386,5 @@ public class EventSystem {
         e.setEffect(choice, effect);
     }
 
-    //---Dynamic Generation---
-    //Look up keyword table
-    //Find compatible Object, Context and Subject
-    //Get choice effects
-    //Check against label
-    //Apply modifier based on game state
 }
 

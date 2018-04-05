@@ -7,6 +7,8 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -121,12 +123,12 @@ public class GameActivity extends AppCompatActivity {
         stabBonus = stabBonus / 10;
 
         //Set Starting Resources - 50%
-        approval += appBonus + 50;
-        budget += budBonus += 50000;
-        stability = stabBonus += 2.5;
+        approval += appBonus + 100;
+        budget += budBonus += 99000;
+        stability = stabBonus += 4.9;
 
         //Events
-        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"));
+        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"), false); //Set the use of AI or not here
         eventCounter = 0;
         eventLock = true;
         eventAlertBuilder = new AlertDialog.Builder(GameActivity.this);
@@ -197,7 +199,7 @@ public class GameActivity extends AppCompatActivity {
         if(budget >= 20000){
             score += 1;
         }
-        if(stability >= 2.5){
+        if(stability >= 2){
             score += 1;
         }
         return score;
@@ -388,19 +390,15 @@ public class GameActivity extends AppCompatActivity {
         Event e = new Event();
         //Scripted event name
         String name = eventName;
-        //AI Flag
-        boolean flag = false;
 
         if (name == null){
             //Normal Event
-            if(!flag){
-                if(training){
-                    //Training Event
-                    e = eventSystem.getTrainingEvent();
-                } else {
-                    //Random premade event
-                    e = eventSystem.findPremadeEvent("None", true);
-                }
+            if(training){
+                //Training Event
+                e = eventSystem.getTrainingEvent();
+            } else {
+                //Random premade event
+                e = eventSystem.findPremadeEvent("None", true);
             }
         } else {
             //Get Premade Event Using Name, Override Event lock
@@ -411,6 +409,7 @@ public class GameActivity extends AppCompatActivity {
         return e;
     }
 
+    //Fire events at certain time
     private boolean timeCheck(){
         //Election Events
         if (dayTotal == 290 && year ==  4){
@@ -490,8 +489,6 @@ public class GameActivity extends AppCompatActivity {
             c3Stab.setText(String.format("%.1f",e.getEffectS()));
         }
 
-
-
         //Set Button Text
         button1.setText(e.getChoiceA());
         button2.setText(e.getChoiceB());
@@ -538,6 +535,12 @@ public class GameActivity extends AppCompatActivity {
         //Prevent Dismissal
         eventDialog.setCanceledOnTouchOutside(false);
         eventDialog.setCancelable(false);
+        //Get window
+        Window w = eventDialog.getWindow();
+        WindowManager.LayoutParams wlp = w.getAttributes();
+        //Set lower than centre so effects can always be seen
+        wlp.y = 100;
+        w.setAttributes(wlp);
         //Show
         eventDialog.show();
     }
@@ -645,10 +648,4 @@ public class GameActivity extends AppCompatActivity {
         startActivity(i);
         this.finish();
     }
-
-
-    //TODO
-    //Add more random events
-
-    //Questionnaire
 }

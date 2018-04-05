@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuActivity">
+        <activity
+            android:name=".MenuActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +23,22 @@
         <activity
             android:name=".SetupActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".HelpActivity" />
         <activity android:name=".InfoActivity" />
         <activity
             android:name=".GameActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FinishActivity"
-            android:noHistory="true" />
-        <activity android:name=".QActivity"></activity>
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity android:name=".QActivity"
+            android:screenOrientation="portrait" >
+
+        </activity>
     </application>
 
 </manifest>

@@ -3,27 +3,30 @@ package com.honours.louis.politicsgame;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.honours.louis.politicsgame.org.pielot.rf.PoliticsGameRandomForest;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TrainingSuite {
 
-    public Event getTrainingEvent() {
+    public Event getTrainingEvent(String situation) {
         //Create an event for training
         //Random positive and negative values in a boundary for each choice
         double app;
         double bud;
         double stab;
 
-        int tier = ThreadLocalRandom.current().nextInt(1, 4);
-        Log.d("TRAINING SUITE", "Random tier value: " + String.valueOf(tier));
+        //Random tier
+        Random r = new Random();
+        int tier = r.nextInt(5);
         //Get effects
         app = getEffect(1, tier);
         bud = getEffect(2, tier);
         stab = getEffect(3, tier);
 
-        boolean negative = negativeChance();
+        boolean negative = negativeChance(situation);
 
         if(negative){
             app = -app;
@@ -49,7 +52,8 @@ public class TrainingSuite {
 
     private double getEffect(int choice, int tier) {
         double effect;
-        effect = getRandomValue(choice, tier);
+        //effect = getRandomValue(choice, tier);
+        effect = getSetValue(choice, tier);
 
         return effect;
     }
@@ -112,6 +116,53 @@ public class TrainingSuite {
         return i;
     }
 
+    //Get set value (Event tier 1 - 5)
+    private double getSetValue(int choice, int tier){
+        double i = 0;
+        if(tier == 0) {
+            if (choice == 1){
+                i = 5;
+            } else if(choice == 2){
+                i = 2500;
+            } else if(choice == 3){
+                i = 0.1;
+            }
+        } else if(tier == 1){
+            if (choice == 1){
+                i = 8;
+            } else if(choice == 2){
+                i = 5000;
+            } else if(choice == 3){
+                i = 0.2;
+            }
+        } else if(tier == 2){
+            if (choice == 1){
+                i = 10;
+            } else if(choice == 2){
+                i = 7500;
+            } else if(choice == 3){
+                i = 0.3;
+            }
+        } else if(tier == 3){
+            if (choice == 1){
+                i = 12;
+            } else if(choice == 2){
+                i = 10000;
+            } else if(choice == 3){
+                i = 0.4;
+            }
+        } else if(tier == 4){
+            if (choice == 1){
+                i = 15;
+            } else if(choice == 2){
+                i = 12500;
+            } else if(choice == 3){
+                i = 0.5;
+            }
+        }
+        return i;
+    }
+
     private double round(double effect, int choice){
         //Round numbers
         if(choice <= 2){
@@ -125,9 +176,35 @@ public class TrainingSuite {
         return effect;
     }
 
-    private boolean negativeChance(){
-        if(ThreadLocalRandom.current().nextInt(0, 9) < 5){
-            return true;
+    //Chance for negative events based on Situation
+    private boolean negativeChance(String situation){
+        int i = new Random().nextInt(10);
+        switch(situation) {
+            case "Low":
+                if(i < 8){
+                    return true;
+                }
+                break;
+            case "Moderate":
+                if(i < 7){
+                    return true;
+                }
+                break;
+            case "Substantial":
+                if(i < 6){
+                    return true;
+                }
+                break;
+            case "Severe":
+                if(i < 5){
+                    return true;
+                }
+                break;
+            case "Critical":
+                if(i < 4){
+                    return true;
+                }
+                break;
         }
         return false;
     }
