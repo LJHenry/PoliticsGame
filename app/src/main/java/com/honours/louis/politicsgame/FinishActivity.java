@@ -70,16 +70,16 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
                 description.setText(" Your approval rating was low. The public was unhappy.");
             }
             if(b < 20000) {
-                description.append(" You ran the budget into the ground. There was no more money.");
+                description.append(" You spent too much of the budget.");
             }
             if(s < 2){
-                description.append(" Your government became too unstable. Your own party wanted to oust you.");
+                description.append(" Your party wasn't united. The campaign was unstable.");
             }
         }
     }
 
     private String getConditions(){
-        if(a > 60 && s > 4 && b > 35000){
+        if(a > 60 && s > 3 && b > 35000){
             return "a landslide victory!";
         } else if(a < 60 && a > 45 && s > 2.5 && b >= 20000){
             return "hard fought and well won.";

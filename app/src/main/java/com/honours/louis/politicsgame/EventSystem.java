@@ -45,6 +45,7 @@ public class EventSystem {
     private TrainingSuite t;
     private PoliticsGameRandomForest rf;
     private boolean flagUseAi; //If false AI will not be used
+    private String predictedChoice;
 
     public EventSystem(Context context, String cn, int gt, String e, boolean useAi) {
         c = context.getApplicationContext();
@@ -83,7 +84,7 @@ public class EventSystem {
         //Calculate situation
         //situation = getSituation();
         //Log game state
-        String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
+        String state = getResourcePercentage() + "," + isNegative + "," + choice + "PREDICTED: " + predictedChoice + "\n";
         log(state);
         //Remember last situation -- FIX THIS
         lastSituation = "";
@@ -103,21 +104,6 @@ public class EventSystem {
 
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
-
-    /*
-    //Get choice as a word
-    private String getChoiceAsWord(int c){
-        String s = "";
-        if(c == 1){
-            s = "one";
-        } else if(c == 2){
-            s = "two";
-        } else if(c == 3){
-            s = "three";
-        }
-        return s;
-    }
-    */
 
     //Write out game state to log - INTERNAL PRIVATE STORAGE
     private void log(String state) {
@@ -143,8 +129,18 @@ public class EventSystem {
     //Find event in pool
     public Event findEvent(String label, boolean random) {
         if (random) {
-            //Pool 1-5
-            return pool.getEvent(getSituation(), negativeMultiplyer);
+            Event e;
+            e = pool.getRandomEvent(getSituation(), negativeMultiplyer);
+            if(flagUseAi){
+                //Predict choice
+                String choice = getPrediction(approval, budget, stability, isNegative);
+                modifyEffectBySituation(e, choice);
+
+                //DEBUG - Output
+                Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+                toast2.show();
+            }
+            return e;
         } else {
             //Pool A - Scripted
             //Time based events (game start, election)
@@ -186,7 +182,7 @@ public class EventSystem {
         return null;
     }
 
-    //Fetch event from pool
+    //Fetch scripted event from pool A
     private Event getEvent(String label){
         Event e;
         e = pool.getEventByName(label);
@@ -398,39 +394,47 @@ public class EventSystem {
         //Run classification to get prediction
         Prediction p = rf.runClassification();
         //Return the prediction as String
+        predictedChoice = p.label;
         return p.label;
     }
 
     //Modify the effect of the choice predicted by the classifier
     private void modifyEffectBySituation(Event e, String choice){
-        double modifier  = 0;
+        //Positive/Negative modifier
+        double modifierP  = 0;
+        double modifierN  = 0;
 
         //Get game situation
         switch (getSituation()){
             case "Low":
-                modifier = 1.75;
+                modifierN = 1.75;
+                modifierP = 0.50;
                 break;
             case "Moderate":
-                modifier = 1.50;
+                modifierN = 1.50;
+                modifierP = 0.75;
                 break;
             case "Substantial":
-                modifier = 1.35;
+                modifierN = 1.2;
+                modifierP = 1.2;
                 break;
             case "Severe":
-                modifier = 1.25;
+                modifierN = 0.75;
+                modifierP = 1.50;
                 break;
             case "Critical":
-                modifier = 1.15;
+                modifierN = 0.50;
+                modifierP = 1.75;
                 break;
         }
 
         //Get predicted effect
         double effect = e.getEffectByLabel(choice);
-        //Apply modifier
+        //Apply modifier by multiplying
         if(e.isNegative()){
-            effect = effect * modifier;
+            effect = effect * modifierN;
         } else if(!e.isNegative()){
-            effect = (effect * modifier) - effect;
+            effect = effect * modifierP;
         }
         e.setEffect(choice, effect);
     }

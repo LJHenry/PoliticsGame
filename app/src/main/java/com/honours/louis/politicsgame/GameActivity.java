@@ -20,6 +20,8 @@ public class GameActivity extends AppCompatActivity {
 
     //Training mode, uses percentages for easier choice making
     boolean training = true;
+    //Set the use of AI or not here
+    boolean useAI = true;
 
     //Game loop
     private boolean gameOver;
@@ -128,7 +130,7 @@ public class GameActivity extends AppCompatActivity {
         stability = stabBonus += 2.5;
 
         //Events
-        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"), true); //Set the use of AI or not here
+        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"), useAI);
         eventCounter = 0;
         eventLock = true;
         eventAlertBuilder = new AlertDialog.Builder(GameActivity.this);
@@ -387,7 +389,7 @@ public class GameActivity extends AppCompatActivity {
 
     //Get an Event
     private Event getEvent(){
-        Event e = new Event();
+        Event e;
         //Scripted event name
         String name = eventName;
 
