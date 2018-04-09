@@ -8,6 +8,7 @@ import com.honours.louis.politicsgame.org.pielot.rf.PoliticsGameRandomForest;
 import com.honours.louis.politicsgame.org.pielot.rf.Prediction;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 /**
  * System will take game parameters and produce a suitable event.
@@ -29,8 +30,9 @@ public class EventSystem {
     //Game Situation
     private int day;
     private int year;
-    private String situation;
+    private ArrayList<String> situations;
     private String lastSituation;
+    private double negativeMultiplyer;
     //Event
     private int choice;
     private String lastEffects;
@@ -50,6 +52,9 @@ public class EventSystem {
         countryName = cn;
         govType = gt;
         engagement = e;
+        //Situation memory
+        situations = new ArrayList<>();
+        negativeMultiplyer = 0;
         //Name of log file
         logFilename = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
         //Initialise events
@@ -80,8 +85,8 @@ public class EventSystem {
         //Log game state
         String state = getResourcePercentage() + "," + isNegative + "," + choice + "\n";
         log(state);
-        //Remember last situation
-        lastSituation = situation;
+        //Remember last situation -- FIX THIS
+        lastSituation = "";
     }
 
     //Get resources as percentage(string)
@@ -135,60 +140,45 @@ public class EventSystem {
         c.deleteFile(logFilename);
     }
 
-    //Get a new event
-    public void getNewEvent(double a, double b, double s, int d, int y, String l) {
-        //Get game state
-        approval = a;
-        budget = b;
-        stability = s;
-        day = d;
-        year = y;
-        lastSituation = l;
-
-        //String label = getSituation();
-
-        //Do relevant stuff
-    }
-
     //Find event in pool
-    public Event findPremadeEvent(String label, boolean random) {
+    public Event findEvent(String label, boolean random) {
         if (random) {
-            //Pool B - Random
-            return pool.getEvent();
+            //Pool 1-5
+            return pool.getEvent(getSituation(), negativeMultiplyer);
         } else {
             //Pool A - Scripted
             //Time based events (game start, election)
             switch (label) {
                 case "GameStart":
                     //Welcome
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "Example":
                     //Event Example
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "Resources":
                     //Resources Description
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "ElectionWarning":
                     //Election Primer Event
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "BeginCampaign":
                     //Start of Campaign
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "OppositionCampaign":
                     //opposition start Campaign
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "ElectionProgress":
                     //Election Progresses
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "ElectionTwist":
                     //Twist in Election
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "ElectionLoosing":
                     //Player is likely to loose
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 case "ElectionClose":
                     //Election is about to occur
-                    return getPremadeEvent(label);
+                    return getEvent(label);
                 default:
                     break;
             }
@@ -197,7 +187,7 @@ public class EventSystem {
     }
 
     //Fetch event from pool
-    private Event getPremadeEvent(String label){
+    private Event getEvent(String label){
         Event e;
         e = pool.getEventByName(label);
         if(flagUseAi){
@@ -211,15 +201,18 @@ public class EventSystem {
     //Get training event
     public Event getTrainingEvent(){
         //Get event
-        Event e = t.getTrainingEvent(getSituation());
+        Event e = t.getTrainingEvent(getSituation(), negativeMultiplyer);
+        //DEBUG - Output
+        Toast toast1 = Toast.makeText(c, getSituation(), Toast.LENGTH_SHORT);
+        toast1.show();
         if(flagUseAi){
             //Predict choice
             String choice = getPrediction(approval, budget, stability, isNegative);
             modifyEffectBySituation(e, choice);
 
             //DEBUG - Output
-            Toast toast = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
-            toast.show();
+            Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+            toast2.show();
         }
         return e;
     }
@@ -231,28 +224,29 @@ public class EventSystem {
         //Higher score = worse situation
         //Closer to election score is naturally higher
 
-        String label = "Critical"; //Only stays as this if score is over 40 = critical
+        String label = "Critical"; //Only stays as this if score is over 60 = critical
         double score = 0;
 
         score = calculateScore();
 
-        if (score <= 10) {
+        if (score <= 20) {
             //Low
             label = "Low";
-        } else if (score <= 20) {
+        } else if (score <= 30) {
             //Moderate
             label = "Moderate";
-        } else if (score <= 30) {
+        } else if (score <= 40) {
             //Substantial
             label = "Substantial";
-        } else if (score <= 40) {
+        } else if (score <= 50) {
             //Severe
             label = "Severe";
-        } else if (score <= 50) {
+        } else if (score <= 60) {
             //Critical
             label = "Critical";
         }
 
+        rememberSituation(label);
         return label;
     }
 
@@ -301,13 +295,13 @@ public class EventSystem {
         }
 
         //Stability
-        if (stability < 1) {
+        if (stability < 0.5) {
             score += 20;
-        } else if (stability < 2) {
+        } else if (stability < 1.5) {
             score += 15;
-        } else if (stability < 3){
+        } else if (stability < 2.5){
             score += 10;
-        } else if(stability < 4){
+        } else if(stability < 3.5){
             score += 5;
         }
 
@@ -333,6 +327,57 @@ public class EventSystem {
         }
 
         return score;
+    }
+
+    //Keep a running tally of situations
+    private void rememberSituation(String s){
+        situations.add(s);
+        entropy();
+    }
+
+    //Increase chance of negative events based on situations over time
+    private void entropy(){
+
+        //Assess situations
+        int[] situ = new int[5];
+        //Initialise
+        for(int i = 0; i < situ.length; i++){
+            situ[i] = 0;
+        }
+        for(String s : situations){
+            if(s == "Low"){
+                situ[0]++;
+            } else if(s == "Moderate"){
+                situ[1]++;
+            } else if(s == "Substantial"){
+                situ[2]++;
+            } else if(s == "Severe"){
+                situ[3]++;
+            } else if(s == "Critical"){
+                situ[4]++;
+            }
+        }
+
+        //Find most prevalent situation
+        int max = situ[0];
+        for(int i = 0; i < situ.length; i++){
+            if(situ[i] > max){ //If equal take the lowest situation
+                max = i;
+            }
+        }
+
+        //Increase negative chance based on general situation
+        if(max == 0){
+            negativeMultiplyer = 2;
+        } else if(max == 1){
+            negativeMultiplyer = 1.75;
+        }  else if(max == 2){
+            negativeMultiplyer = 1.5;
+        }  else if(max == 3){
+            negativeMultiplyer = 1.25;
+        }  else if(max == 4){
+            negativeMultiplyer = 1;
+        }
     }
 
     //Log effects
@@ -382,7 +427,11 @@ public class EventSystem {
         //Get predicted effect
         double effect = e.getEffectByLabel(choice);
         //Apply modifier
-        effect = effect * modifier;
+        if(e.isNegative()){
+            effect = effect * modifier;
+        } else if(!e.isNegative()){
+            effect = (effect * modifier) - effect;
+        }
         e.setEffect(choice, effect);
     }
 

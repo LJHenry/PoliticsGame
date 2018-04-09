@@ -14,6 +14,7 @@ public class Event {
     private EventElement eventSub;
     private String eventName;
     private boolean isNegative;
+    private int tier;
 
     public Event(){
         //For null event
@@ -107,6 +108,15 @@ public class Event {
         } else if(effect == "3") {
             this.eventSub.setEffect(value);
         }
+    }
+
+    //Tier
+    public void setTier(int i){
+        this.tier = i;
+    }
+
+    public int getTier(){
+        return this.tier;
     }
 
 }

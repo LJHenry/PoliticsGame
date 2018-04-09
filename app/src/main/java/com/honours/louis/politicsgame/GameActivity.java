@@ -123,12 +123,12 @@ public class GameActivity extends AppCompatActivity {
         stabBonus = stabBonus / 10;
 
         //Set Starting Resources - 50%
-        approval += appBonus + 100;
-        budget += budBonus += 99000;
-        stability = stabBonus += 4.9;
+        approval += appBonus + 50;
+        budget += budBonus += 50000;
+        stability = stabBonus += 2.5;
 
         //Events
-        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"), false); //Set the use of AI or not here
+        eventSystem = new EventSystem(getApplicationContext(), countryName, govType, getIntent().getStringExtra("Engagement"), true); //Set the use of AI or not here
         eventCounter = 0;
         eventLock = true;
         eventAlertBuilder = new AlertDialog.Builder(GameActivity.this);
@@ -398,11 +398,11 @@ public class GameActivity extends AppCompatActivity {
                 e = eventSystem.getTrainingEvent();
             } else {
                 //Random premade event
-                e = eventSystem.findPremadeEvent("None", true);
+                e = eventSystem.findEvent("None", true);
             }
         } else {
             //Get Premade Event Using Name, Override Event lock
-            e = eventSystem.findPremadeEvent(name, false);
+            e = eventSystem.findEvent(name, false);
             eventName = null;
         }
 
@@ -593,11 +593,11 @@ public class GameActivity extends AppCompatActivity {
         Event e = new Event();
 
         if(day == 4){
-            e = eventSystem.findPremadeEvent("GameStart", false);
+            e = eventSystem.findEvent("GameStart", false);
         } else if (day == 6){
-            e = eventSystem.findPremadeEvent("Example", false);
+            e = eventSystem.findEvent("Example", false);
         } else if (day == 8) {
-            e = eventSystem.findPremadeEvent("Resources", false);
+            e = eventSystem.findEvent("Resources", false);
         }
 
         return e;

@@ -1,17 +1,12 @@
 package com.honours.louis.politicsgame;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import com.honours.louis.politicsgame.org.pielot.rf.PoliticsGameRandomForest;
-
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TrainingSuite {
 
-    public Event getTrainingEvent(String situation) {
+    public Event getTrainingEvent(String situation, double negativeMultiplyer) {
         //Create an event for training
         //Random positive and negative values in a boundary for each choice
         double app;
@@ -26,7 +21,7 @@ public class TrainingSuite {
         bud = getEffect(2, tier);
         stab = getEffect(3, tier);
 
-        boolean negative = negativeChance(situation);
+        boolean negative = negativeChance(situation, negativeMultiplyer);
 
         if(negative){
             app = -app;
@@ -177,31 +172,33 @@ public class TrainingSuite {
     }
 
     //Chance for negative events based on Situation
-    private boolean negativeChance(String situation){
-        int i = new Random().nextInt(10);
+    private boolean negativeChance(String situation, double multiplyer){
+        double i = new Random().nextInt(20);
+        //Higher the number more likely to be negative
+        i = i * multiplyer;
         switch(situation) {
             case "Low":
-                if(i < 8){
+                if(i <= 11){
                     return true;
                 }
                 break;
             case "Moderate":
-                if(i < 7){
+                if(i <= 10){
                     return true;
                 }
                 break;
             case "Substantial":
-                if(i < 6){
+                if(i <= 9){
                     return true;
                 }
                 break;
             case "Severe":
-                if(i < 5){
+                if(i <= 8){
                     return true;
                 }
                 break;
             case "Critical":
-                if(i < 4){
+                if(i <= 7){
                     return true;
                 }
                 break;
