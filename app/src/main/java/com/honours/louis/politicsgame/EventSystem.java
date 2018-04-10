@@ -8,6 +8,7 @@ import com.honours.louis.politicsgame.org.pielot.rf.PoliticsGameRandomForest;
 import com.honours.louis.politicsgame.org.pielot.rf.Prediction;
 
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -75,13 +76,12 @@ public class EventSystem {
         }
     }
 
-    public void getGameState(double a, double b, double s, int c, boolean negative, String t) {
+    public void getGameState(double a, double b, double s, int c, boolean negative) {
         //Resources
         approval = a;
         budget = b;
         stability = s;
         //Choice and event
-        tier = t;
         choice = c;
         if (negative) {
             isNegative = "negative";
@@ -91,7 +91,7 @@ public class EventSystem {
         //Calculate situation
         //situation = getSituation();
         //Log game state
-        String state = getResources() + "," + tier + "," + isNegative + "," + choice + "\n"; // " --" +  "PREDICTED: " + predictedChoice +
+        String state = getResources() + "," + isNegative + "," + choice + "\n"; // " --" +  "PREDICTED: " + predictedChoice +
         log(state);
         //Remember last situation
         lastSituation = "";
@@ -102,17 +102,17 @@ public class EventSystem {
 
         //Percent
         //% of approval
-        //double a = (approval/100) * 100;
+        double a = (approval/100) * 100;
         //% of budget
-        //double b = (budget/100000) * 100;
+        double b = (budget/100000) * 100;
         //% of stability
-        //double s = (stability/5) * 100;
+        double s = (stability/5) * 100;
 
 
         //Actual
-        double a = approval;
-        double b = budget;
-        double s = stability;
+        //double a = approval;
+        //double b = budget;
+        //double s = stability;
 
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
@@ -434,31 +434,71 @@ public class EventSystem {
 
     //Modify the effect of the choice predicted by the classifier
     private void modifyEffectBySituation(Event e, String choice){
-        //Positive/Negative modifier
+        //Set Positive/Negative modifier depending on resource
         double modifierP  = 0;
         double modifierN  = 0;
 
         //Get game situation
         switch (getSituation()){
             case "Low":
-                modifierN = 1.75;
-                modifierP = 0.50;
+                if(choice == "1"){
+                    modifierN = 1.50;
+                    modifierP = 0.50;
+                } else if(choice == "2"){
+                    modifierN = 1.35;
+                    modifierP = 0.75;
+                } else if(choice == "3"){
+                    modifierN = -0.1;
+                    modifierP = 0.01;
+                }
                 break;
             case "Moderate":
-                modifierN = 1.50;
-                modifierP = 0.75;
+                if(choice == "1"){
+                    modifierN = 1.25;
+                    modifierP = 0.75;
+                } else if(choice == "2"){
+                    modifierN = 1.2;
+                    modifierP = 0.85;
+                } else if(choice == "3"){
+                    modifierN = -0.07;
+                    modifierP = 0.02;
+                }
                 break;
             case "Substantial":
-                modifierN = 1.2;
-                modifierP = 1.2;
+                if(choice == "1"){
+                    modifierN = 1.15;
+                    modifierP = 1.2;
+                } else if(choice == "2"){
+                    modifierN = 1.1;
+                    modifierP = 1.1;
+                } else if(choice == "3"){
+                    modifierN = -0.05;
+                    modifierP = 0.05;
+                }
                 break;
             case "Severe":
-                modifierN = 0.75;
-                modifierP = 1.50;
+                if(choice == "1"){
+                    modifierN = 0.75;
+                    modifierP = 1.50;
+                } else if(choice == "2"){
+                    modifierN = 0.85;
+                    modifierP = 1.2;
+                } else if(choice == "3"){
+                    modifierN = -0.02;
+                    modifierP = 0.07;
+                }
                 break;
             case "Critical":
-                modifierN = 0.50;
-                modifierP = 1.75;
+                if(choice == "1"){
+                    modifierN = 0.50;
+                    modifierP = 1.35;
+                } else if(choice == "2"){
+                    modifierN = 0.75;
+                    modifierP = 1.35;
+                } else if(choice == "3"){
+                    modifierN = -0.01;
+                    modifierP = 0.1;
+                }
                 break;
         }
 
@@ -466,10 +506,26 @@ public class EventSystem {
         double effect = e.getEffectByLabel(choice);
         //Apply modifier by multiplying
         if(e.isNegative()){
-            effect = effect * modifierN;
+            if(choice == "3"){
+                effect -= modifierN;
+            } else {
+                effect = effect * modifierN;
+            }
         } else if(!e.isNegative()){
-            effect = effect * modifierP;
+            if(choice == "3"){
+                effect += modifierP;
+            } else {
+                effect = effect * modifierP;
+            }
         }
+
+        //Round
+        if(choice == "3"){
+            //No need
+        } else {
+            effect = Math.round(effect);
+        }
+
         e.setEffect(choice, effect);
     }
 

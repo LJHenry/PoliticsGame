@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ public class GameActivity extends AppCompatActivity {
     //Training mode, uses percentages for easier choice making
     boolean training = false;
     //Set the use of AI or not here
-    boolean useAI = false;
+    boolean useAI = true;
 
     //Game loop
     private boolean gameOver;
@@ -239,7 +240,7 @@ public class GameActivity extends AppCompatActivity {
         } else {
             appText.setText(String.format("%.0f", approval) + "%");
             budText.setText("£" + String.format("%.0f", budget));
-            stabText.setText(String.format("%.1f", stability));
+            stabText.setText(String.format("%.2f", stability));
         }
 
 
@@ -488,7 +489,7 @@ public class GameActivity extends AppCompatActivity {
             //Budget
             c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
             //Stability
-            c3Stab.setText(String.format("%.1f",e.getEffectS()));
+            c3Stab.setText(String.format("%.2f",e.getEffectS()));
         }
 
         //Set Button Text
@@ -504,7 +505,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 1;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });
@@ -515,7 +516,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 2;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });
@@ -526,7 +527,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 3;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
                 getChoice(e);
             }
         });
@@ -534,13 +535,14 @@ public class GameActivity extends AppCompatActivity {
         //Create Dialog
         eventAlertBuilder.setView(eView);
         eventDialog = eventAlertBuilder.create();
+        eventDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Prevent Dismissal
         eventDialog.setCanceledOnTouchOutside(false);
         eventDialog.setCancelable(false);
         //Get window
         Window w = eventDialog.getWindow();
         WindowManager.LayoutParams wlp = w.getAttributes();
-        //Set lower than centre so effects can always be seen
+        //Set lower than centre so resources can always be seen
         wlp.y = 100;
         w.setAttributes(wlp);
         //Show
@@ -556,7 +558,7 @@ public class GameActivity extends AppCompatActivity {
             if(e.getEffectA() == 0){
                 appEffect.setText("None");
             } else {
-                appEffect.setText(String.valueOf(e.getEffectA()));
+                appEffect.setText(String.format("%.0f", e.getEffectA()));
             }
             choiceNumber = 0;
 
@@ -567,7 +569,7 @@ public class GameActivity extends AppCompatActivity {
             if(e.getEffectB() == 0){
                 budEffect.setText("None");
             } else {
-                budEffect.setText(String.valueOf(e.getEffectB()));
+                budEffect.setText(String.format("%.0f", e.getEffectB())); //FIX
             }
             choiceNumber = 0;
 
@@ -578,7 +580,7 @@ public class GameActivity extends AppCompatActivity {
             if(e.getEffectS() == 0){
                 stabEffect.setText("None");
             } else {
-                stabEffect.setText(String.valueOf(e.getEffectS()));
+                stabEffect.setText(String.format("%.2f", e.getEffectS())); //FIX
             }
             choiceNumber = 0;
 

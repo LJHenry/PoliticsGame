@@ -69,14 +69,15 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
         if(win){
             description.setText("Congratulations! You were re-elected. The election was " + getConditions());
         } else {
+            description.setText("Commiserations.");
             if(a < 40) {
-                description.setText(" Your approval rating was low. The public was unhappy.");
+                description.append(" Your approval rating was low. The public was unhappy.");
             }
             if(b < 20000) {
                 description.append(" You spent too much of the budget.");
             }
             if(s < 2){
-                description.append(" Your party wasn't united. The campaign was unstable.");
+                description.append(" Your party was unstable. Party members did not believe in your government.");
             }
         }
     }

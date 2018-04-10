@@ -150,7 +150,7 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
             w = "Loss";
         }
 
-        return "Game:" + w + "Evaluation Answers --- Q1:" + String.valueOf(answer1) + " Q2:" + String.valueOf(answer2) + " Q3:" + answer3 + " Q4:" + answer4 + " Q5:" + answer5 + "\n";
+        return "Game:" + w + " Evaluation Answers --- Q1:" + String.valueOf(answer1) + " Q2:" + String.valueOf(answer2) + " Q3:" + answer3 + " Q4:" + answer4 + " Q5:" + answer5 + "\n";
     }
 
     //Write out answers to log - INTERNAL PRIVATE STORAGE

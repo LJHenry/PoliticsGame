@@ -64,12 +64,12 @@ public class EventPool {
         poolA.add(makeEvent("Example", "Events", "You Must", 0, "Appear", "Make", 0,"Here", "A Choice",0, false,0));
         poolA.add(makeEvent("Resources", "Balance", "Approval", 0, "Your", "Budget", 0, "Resources", "Stability",0, false,0));
         //Election
-        poolA.add(makeEvent("ElectionWarning", "General Election", "Make a Speech", 5, "To Be Held", "Hold Fundraiser", 7500, "Soon", "Organise Party", 0.25, false,0));
-        poolA.add(makeEvent("BeginCampaign", "The Government", "Focus on People", 10, "Begin", "Focus on Economy", 7500, "Their Election Campaign", "Focus on Parliament",0.3, false,0));
-        poolA.add(makeEvent("OppositionCampaign", "The Opposition", "Battle in Parliament", -12, "Begin", "Fund our Campaign", -12500, "Their Election Campaign", "Battle on the Streets", -0.4, true,0));
-        poolA.add(makeEvent("ElectionProgress", "Government", "Rally Supporters", 6, "Election Campaign", "Raise more Funds", 5000, "Makes Progress", "Increase Funding", 0.3, false,0));
-        poolA.add(makeEvent("ElectionTwist", "Opposition", "Stick to the Plan", -10, "Increase Campaigning", "Focus in These Areas", -7500, "At Critical Voting Areas", "Defend Them Immediately", -0.5, true,0));
-        poolA.add(makeEvent("ElectionClose", "Election Day", "Go Door to Door", 5, "is Almost", "Scrounge Funds", 5000, "Here", "Confide with MP's", 0.2, false,0));
+        poolA.add(makeEvent("ElectionWarning", "General Election", "Make a Speech", 5, "To Be Held", "Hold Fundraiser", 2500, "Soon", "Organise Party", 0.1, false,1));
+        poolA.add(makeEvent("BeginCampaign", "The Government", "Focus on People", 7, "Begin", "Focus on Economy", 5000, "Their Election Campaign", "Focus on Parliament",0.2, false,2));
+        poolA.add(makeEvent("OppositionCampaign", "The Opposition", "Battle in Parliament", -9, "Begin", "Fund our Campaign", -7500, "Their Election Campaign", "Battle on the Streets", -0.3, true,3));
+        poolA.add(makeEvent("ElectionProgress", "Government", "Rally Supporters", 9, "Election Campaign", "Raise more Funds", 7500, "Makes Progress", "Increase Funding", 0.3, false,3));
+        poolA.add(makeEvent("ElectionTwist", "Opposition", "Stick to the Plan", -10, "Increase Campaigning", "Focus in These Areas", -7500, "At Critical Voting Areas", "Defend Them Immediately", -0.3, true,3));
+        poolA.add(makeEvent("ElectionClose", "Election Day", "Go Door to Door", 5, "is Almost", "Scrounge Funds", 2500, "Here", "Confide with MP's", 0.1, false,1));
     }
 
     //Fill Random Events
@@ -130,7 +130,7 @@ public class EventPool {
         pool4Negative.add(makeEvent("None", "Security Secretary", "Play Down Fears", -11, "Sows Fear of", "Appoint Specialists", -10000, "Chemical Weapons Threat", "Fire Fearmonger", -0.4, true, 4));
         pool4Positive.add(makeEvent("None", "Violent Crime", "Assure Families", 11, "Growing Problematic", "Gang Crackdown", 10000, "in The Capital", "Encourage Mayor", 0.4, false, 4));
         pool4Negative.add(makeEvent("None", "Internet Experts", "Restrict Data", -12, "Warn Public About", "Increase Cybersecurity", -10000, "Data Safety", "Keep Data Free", -0.4, true, 4));
-        pool4Positive.add(makeEvent("None", "International Organisation", "Cycle Into Economy", 11, "Awards Government", "Take it All", 10000, "Large Development Grant", "Streamline Bureaucracy", 0.4, false, 4));
+        pool4Positive.add(makeEvent("None", "International Organisation", "Cycle Into Economy", 11, "Awards Government", "Take it All", 10000, "Human Development Grant", "Streamline Bureaucracy", 0.4, false, 4));
         //Tier 5
         pool5Negative.add(makeEvent("None", "Deadly Extremist Attack", "Lockdown!", -14, "Occurs in", "Deploy Counter Terror", -12500, "the Nations Capital", "Condemn It", -0.5, true, 5));
         pool5Positive.add(makeEvent("None", "Government Fiscal Strategy", "For the People", 13, "Gives Boost to", "Excellent!", 12500, "the Economy", "A Party Success", 0.5, false, 5));
@@ -275,31 +275,31 @@ public class EventPool {
             if(negative){
                 return makeEvent("None", "Minor Hindrances", "Ignore Them", -5,"Continue to Grieve", "Have them Fixed", -2500, "Government", "Defer to MPs",-0.1, true,1);
             } else {
-                return (makeEvent("None", "", "", 0,"", "", 0, "", "",0, false,1));
+                return (makeEvent("None", "Successful", "Gain Support", 5,"PMQ Session", "Gain Funding", 2500, "Boosts Government Confidence", "Gain Stability",0.1, false,1));
             }
         } else if(tier == 2){
             if(negative){
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, true,2);
+                return makeEvent("None", "Day to Day Troubles", "Defer to Assistants", -6,"Arise", "Fix Some", -5000, "In Parliament", "Prioritise",-0.2, true,2);
             } else {
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, false,2);
+                return makeEvent("None", "Government Ministers", "Tout Virtues", 7,"Propose", "Budget the Motion", 0, "Motion of Parliament", "Unify MPs",0, false,2);
             }
         } else if(tier == 3){
             if(negative){
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, true,3);
+                return makeEvent("None", "Latent Issue", "Apologise", -9,"Rears Head", "Deal With It", -7500, "At Inopportune Time", "Ignore Now",-0.3, true,3);
             } else {
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, false,3);
+                return makeEvent("None", "Government", "Public", 9,"Yield Benefits", "Fiscal", 7500, "From Risky Choice Making", "Parliamentary",0.3, false,3);
             }
         } else if(tier == 4){
             if(negative){
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, true,4);
+                return makeEvent("None", "Mis-step", "Amend to Party", -11,"Tarnishes", "Amend via Media", -10000, "Prime Ministers Reputation", "Amend to Public",0.4, true,4);
             } else {
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, false,4);
+                return makeEvent("None", "Forecast Shows", "Services Focus", 11,"Positive Outlook", "Economic Focus", 10000, "For Government", "Internal Focus",0.4, false,4);
             }
         } else if(tier == 5){
             if(negative){
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, true,5);
+                return makeEvent("None", "Government Set Back", "Not Good", -14,"as Motion Defeated", "Attempt Reparation", -12500, "by Opponents", "Damage Control",-0.5, true,5);
             } else {
-                return makeEvent("None", "", "", 0,"", "", 0, "", "",0, false,5);
+                return makeEvent("None", "Government", "As Promised", 13,"Make Huge Progress", "Make Savings", 12500, "Toward Manifesto Targets", "Rally Party",0.5, false,5);
             }
         }
         return null;
