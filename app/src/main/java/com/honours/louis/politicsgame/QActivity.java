@@ -43,7 +43,7 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
     //Name of log file
     String logFilename;
 
-    private boolean safe;
+    private boolean winOrLoss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,9 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         //Button
         submit = findViewById(R.id.buttonSubmitQuestionnaire);
         submit.setOnClickListener(this);
+
+        //Win Loss
+        winOrLoss = getIntent().getBooleanExtra("WinLoss", false);
 
         logFilename = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
     }
@@ -136,10 +139,18 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         if(q4.isChecked()){
             answer4 = "yes";
         }
-
+        //Spinner
         answer5 = q5Spinner.getSelectedItem().toString();
 
-        return "Evaluation Answers --- Q1: " + String.valueOf(answer1) + " Q2: " + String.valueOf(answer2) + " Q3: " + answer3 + " Q4: " + answer4 + " Q5: " + answer5 + "\n";
+        //Win
+        String w;
+        if(winOrLoss){
+            w = "Win";
+        } else {
+            w = "Loss";
+        }
+
+        return "Game:" + w + "Evaluation Answers --- Q1:" + String.valueOf(answer1) + " Q2:" + String.valueOf(answer2) + " Q3:" + answer3 + " Q4:" + answer4 + " Q5:" + answer5 + "\n";
     }
 
     //Write out answers to log - INTERNAL PRIVATE STORAGE

@@ -145,6 +145,7 @@ public class EventSystem {
             //Get event
             if(positiveOverride){
                 e = pool.getRandomEvent(getSituation(), negativeMultiplier, true);
+                positiveOverride = false;
             } else {
                 e = pool.getRandomEvent(getSituation(), negativeMultiplier, false);
             }

@@ -21,6 +21,7 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
     double a;
     double b;
     double s;
+    boolean winOrLoss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,12 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
         if(getIntent().getBooleanExtra("Win", false)){
             winLoss.setText("You Win!");
             winLoss.setTextColor(Color.parseColor("#019acc"));
+            winOrLoss = true;
             getDescription(true);
         } else {
             winLoss.setText("You Lose!");
             winLoss.setTextColor(Color.parseColor("#cf1313"));
+            winOrLoss = false;
             getDescription(false);
         }
 
@@ -93,6 +96,7 @@ public class FinishActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.buttonQ:
                 //Start Questionnaire Activity
                 Intent i = new Intent(FinishActivity.this, QActivity.class);
+                i.putExtra("WinLoss", winOrLoss);
                 startActivity(i);
                 break;
         }
