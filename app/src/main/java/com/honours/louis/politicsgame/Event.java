@@ -115,8 +115,22 @@ public class Event {
         this.tier = i;
     }
 
-    public int getTier(){
-        return this.tier;
+    public String getTierAsString(){
+        switch (this.tier){
+            case 0:
+                return "zero";
+            case 1:
+                return "one";
+            case 2:
+                return "two";
+            case 3:
+                return "three";
+            case 4:
+                return "four";
+            case 5:
+                return "five";
+        }
+        return "none";
     }
 
 }

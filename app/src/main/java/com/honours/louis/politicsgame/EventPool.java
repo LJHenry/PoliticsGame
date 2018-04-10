@@ -156,12 +156,17 @@ public class EventPool {
     }
 
     //Get Random event, based on Tier and Negativity
-    public Event getRandomEvent(String situation, double negativeMultiplier)                                            {
+    public Event getRandomEvent(String situation, double negativeMultiplier, boolean positiveOverride){
 
         Event e = new Event();
         int tier;
         //Determine positive or negative
-        boolean negative = negativeChance(situation, negativeMultiplier);
+        boolean negative;
+        if(positiveOverride){
+            negative = false;
+        } else {
+            negative = negativeChance(situation, negativeMultiplier);
+        }
 
         //Determine Tier
         tier = getTier();

@@ -19,9 +19,9 @@ import java.util.Random;
 public class GameActivity extends AppCompatActivity {
 
     //Training mode, uses percentages for easier choice making
-    boolean training = true;
+    boolean training = false;
     //Set the use of AI or not here
-    boolean useAI = true;
+    boolean useAI = false;
 
     //Game loop
     private boolean gameOver;
@@ -395,13 +395,13 @@ public class GameActivity extends AppCompatActivity {
 
         if (name == null){
             //Normal Event
-            if(training){
+            //if(training){
                 //Training Event
-                e = eventSystem.getTrainingEvent();
-            } else {
+                //e = eventSystem.getTrainingEvent();
+            //} else {
                 //Random premade event
                 e = eventSystem.findEvent("None", true);
-            }
+            //}
         } else {
             //Get Premade Event Using Name, Override Event lock
             e = eventSystem.findEvent(name, false);
@@ -504,7 +504,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 1;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });
@@ -515,7 +515,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 2;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });
@@ -526,7 +526,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 3;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });

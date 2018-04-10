@@ -32,12 +32,16 @@ public class EventSystem {
     private int year;
     private ArrayList<String> situations;
     private String lastSituation;
-    private double negativeMultiplyer;
+    private double negativeMultiplier;
     //Event
     private int choice;
     private String lastEffects;
     private String isNegative;
     private EventPool pool;
+    private String tier;
+    //Event Memory (Difficulty Adjustment)
+    private ArrayList<Event> events;
+    private boolean positiveOverride;
     //Log File
     private String logFilename; //Device Android ID - unique and recommended secure ID method by Google
     private Context c;
@@ -55,11 +59,13 @@ public class EventSystem {
         engagement = e;
         //Situation memory
         situations = new ArrayList<>();
-        negativeMultiplyer = 0;
+        negativeMultiplier = 0;
         //Name of log file
         logFilename = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
         //Initialise events
         pool = new EventPool();
+        events = new ArrayList<>();
+        positiveOverride = false;
         //Training events
         t = new TrainingSuite();
         //Random Forest
@@ -69,12 +75,13 @@ public class EventSystem {
         }
     }
 
-    public void getGameState(double a, double b, double s, int c, boolean negative) {
+    public void getGameState(double a, double b, double s, int c, boolean negative, String t) {
         //Resources
         approval = a;
         budget = b;
         stability = s;
         //Choice and event
+        tier = t;
         choice = c;
         if (negative) {
             isNegative = "negative";
@@ -84,23 +91,28 @@ public class EventSystem {
         //Calculate situation
         //situation = getSituation();
         //Log game state
-        String state = getResourcePercentage() + "," + isNegative + "," + choice + "PREDICTED: " + predictedChoice + "\n";
+        String state = getResources() + "," + tier + "," + isNegative + "," + choice + "\n"; // " --" +  "PREDICTED: " + predictedChoice +
         log(state);
-        //Remember last situation -- FIX THIS
+        //Remember last situation
         lastSituation = "";
     }
 
-    //Get resources as percentage(string)
-    private String getResourcePercentage(){
+    //Get resources as string
+    private String getResources(){
 
+        //Percent
         //% of approval
-        double a = (approval/100) * 100;
-
+        //double a = (approval/100) * 100;
         //% of budget
-        double b = (budget/100000) * 100;
-
+        //double b = (budget/100000) * 100;
         //% of stability
-        double s = (stability/5) * 100;
+        //double s = (stability/5) * 100;
+
+
+        //Actual
+        double a = approval;
+        double b = budget;
+        double s = stability;
 
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
@@ -130,7 +142,13 @@ public class EventSystem {
     public Event findEvent(String label, boolean random) {
         if (random) {
             Event e;
-            e = pool.getRandomEvent(getSituation(), negativeMultiplyer);
+            //Get event
+            if(positiveOverride){
+                e = pool.getRandomEvent(getSituation(), negativeMultiplier, true);
+            } else {
+                e = pool.getRandomEvent(getSituation(), negativeMultiplier, false);
+            }
+            //AI
             if(flagUseAi){
                 //Predict choice
                 String choice = getPrediction(approval, budget, stability, isNegative);
@@ -140,6 +158,7 @@ public class EventSystem {
                 Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
                 toast2.show();
             }
+            rememberEvent(e);
             return e;
         } else {
             //Pool A - Scripted
@@ -191,13 +210,14 @@ public class EventSystem {
             String choice = getPrediction(approval, budget, stability, isNegative);
             modifyEffectBySituation(e, choice);
         }
+        rememberEvent(e);
         return e;
     }
 
     //Get training event
     public Event getTrainingEvent(){
         //Get event
-        Event e = t.getTrainingEvent(getSituation(), negativeMultiplyer);
+        Event e = t.getTrainingEvent(getSituation(), negativeMultiplier);
         //DEBUG - Output
         Toast toast1 = Toast.makeText(c, getSituation(), Toast.LENGTH_SHORT);
         toast1.show();
@@ -331,6 +351,13 @@ public class EventSystem {
         entropy();
     }
 
+    //Keep a log of events
+    private void rememberEvent(Event e){
+        events.add(e);
+        //Check events
+        checkEvents();
+    }
+
     //Increase chance of negative events based on situations over time
     private void entropy(){
 
@@ -364,27 +391,33 @@ public class EventSystem {
 
         //Increase negative chance based on general situation
         if(max == 0){
-            negativeMultiplyer = 2;
+            negativeMultiplier = 2;
         } else if(max == 1){
-            negativeMultiplyer = 1.75;
+            negativeMultiplier = 1.75;
         }  else if(max == 2){
-            negativeMultiplyer = 1.5;
+            negativeMultiplier = 1.5;
         }  else if(max == 3){
-            negativeMultiplyer = 1.25;
+            negativeMultiplier = 1.25;
         }  else if(max == 4){
-            negativeMultiplyer = 1;
+            negativeMultiplier = 1;
         }
     }
 
-    //Log effects
-    private String getEffectsAmount(Event e){
-        //Get Percentage
-        double a; double b; double s;
-        a = (e.getEffectA()/100) * 100;
-        b = (e.getEffectB()/100000) * 100;
-        s = (e.getEffectS()/5) * 100;
-
-        return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
+    //Check events for adjusting difficulty
+    private void checkEvents(){
+        int count = 0;
+        //If 3 negatives in a row
+        for(Event e : events){
+            if(e.isNegative()){
+                count++;
+            } else {
+                count = 0;
+            }
+        }
+        if(count >= 3){
+            //Push for positive
+            positiveOverride = true;
+        }
     }
 
     //Run situation through AI choice prediction
