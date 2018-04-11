@@ -1,6 +1,8 @@
 package com.honours.louis.politicsgame;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,9 +35,22 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         //Switch case for buttons
         switch (v.getId()) {
             case R.id.buttonPlay:
-                //Begin Game with Setup
-                Intent i = new Intent(MenuActivity.this, SetupActivity.class);
-                startActivity(i);
+                //Get user confirmation that app will record and send data
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int c) {
+                        switch (c) {
+                            case DialogInterface.BUTTON_NEUTRAL:
+                                //Begin Game with Setup
+                                Intent i = new Intent(MenuActivity.this, SetupActivity.class);
+                                startActivity(i);
+                                break;
+                        }
+                    }
+                };
+                //Show dialog
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setMessage("By continuing to use this application, you consent to send anonymous gameplay and evaluation data to a server for the purpose of academic research. If you require more information please consult the project information page from the main menu.").setNeutralButton("Okay", dialogClickListener).show();
                 break;
             case R.id.buttonHelp:
                 //Game Help Page

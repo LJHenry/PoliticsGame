@@ -3,6 +3,7 @@ package com.honours.louis.politicsgame;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,9 +34,7 @@ public class GameActivity extends AppCompatActivity {
     private TextView appText;
     private TextView budText;
     private TextView stabText;
-    private TextView appEffect;
-    private TextView budEffect;
-    private TextView stabEffect;
+    private TextView textEffect;
     private TextView eventText;
     private TextView choiceText;
 
@@ -101,10 +100,8 @@ public class GameActivity extends AppCompatActivity {
         //Event
         eventText = findViewById(R.id.textLastEvent);
         choiceText = findViewById(R.id.textLastChoice);
-        //Effects
-        appEffect = findViewById(R.id.textAppEffect);
-        budEffect = findViewById(R.id.textBudEffect);
-        stabEffect = findViewById(R.id.textStabEffect);
+        //Effect
+        textEffect = findViewById(R.id.textEffect);
 
         //Begin
         setup(getIntent().getIntArrayExtra("Bonuses"));
@@ -184,7 +181,7 @@ public class GameActivity extends AppCompatActivity {
         }.start();
     }
 
-    //Conditions for Winning the election
+    //Conditions for Winning the election -- NEEDS ADJUSTED
     private boolean elected(){
         //Use score to calculate
         if(getScore() >= 3){
@@ -354,13 +351,14 @@ public class GameActivity extends AppCompatActivity {
         if (dayTotal == 250 && year == 4) {
             election = true;
         } else if (dayTotal == 359 && year == 4){
+            //End of Game
             Toast toast = Toast.makeText(getApplicationContext(), "Game Finished", Toast.LENGTH_SHORT);
             toast.show();
             gameOver = true;
         }
 
         if(election){
-            //Special case near the end of the game
+            //Election override
             if(timeCheck()){
                 return true;
             } else {
@@ -378,8 +376,8 @@ public class GameActivity extends AppCompatActivity {
                 eventCheck();
             }
         } else {
-            //Event - 1/25 chance of happening
-            if(new Random().nextInt(25)==0){
+            //Event - 1/40 chance of happening
+            if(new Random().nextInt(40)==0){
                 //Apply event lock
                 eventLock = true;
                 return true;
@@ -396,15 +394,10 @@ public class GameActivity extends AppCompatActivity {
 
         if (name == null){
             //Normal Event
-            //if(training){
-                //Training Event
-                //e = eventSystem.getTrainingEvent();
-            //} else {
-                //Random premade event
-                e = eventSystem.findEvent("None", true);
-            //}
+            //Random event
+            e = eventSystem.findEvent("None", true);
         } else {
-            //Get Premade Event Using Name, Override Event lock
+            //Get Pre-made Event Using Name, Override Event lock
             e = eventSystem.findEvent(name, false);
             eventName = null;
         }
@@ -467,8 +460,7 @@ public class GameActivity extends AppCompatActivity {
         Button button2 = eView.findViewById(R.id.button2);
         Button button3 = eView.findViewById(R.id.button3);
 
-
-        //Set text views text
+        //Set text view text
         title.setText(e.getEventTitle());
 
         if(training){
@@ -486,8 +478,14 @@ public class GameActivity extends AppCompatActivity {
         } else {
             //Approval
             c1App.setText(String.format("%.0f", e.getEffectA()) + "%");
-            //Budget
-            c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
+            //Budget, must account for £ sign
+            double bud = e.getEffectB();
+            if (bud < 0){
+                bud = Math.abs(bud);
+                c2Bud.setText("- £" + String.format("%.0f", bud));
+            } else {
+                c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
+            }
             //Stability
             c3Stab.setText(String.format("%.2f",e.getEffectS()));
         }
@@ -498,6 +496,8 @@ public class GameActivity extends AppCompatActivity {
         button3.setText(e.getChoiceS());
 
         choiceNumber = 0;
+
+        //Set choice, resume time, dismiss dialog, log game state, get choice effects
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -543,45 +543,36 @@ public class GameActivity extends AppCompatActivity {
         Window w = eventDialog.getWindow();
         WindowManager.LayoutParams wlp = w.getAttributes();
         //Set lower than centre so resources can always be seen
-        wlp.y = 100;
+        wlp.y = 150;
         w.setAttributes(wlp);
         //Show
         eventDialog.show();
     }
 
-    //Handle choice made
+    //Apply choice
     private void getChoice(Event e) {
         //Approval
         if (choiceNumber == 1) {
             changeResources(e.getEffectA(), "Approval");
             choiceText.setText(e.getChoiceA());
-            if(e.getEffectA() == 0){
-                appEffect.setText("None");
-            } else {
-                appEffect.setText(String.format("%.0f", e.getEffectA()));
-            }
+            textEffect.setTextColor(Color.parseColor("#cf1313"));
+            textEffect.setText(String.format("%.0f", e.getEffectA()));
             choiceNumber = 0;
 
         //Budget
         } else if (choiceNumber == 2) {
             changeResources(e.getEffectB(), "Budget");
             choiceText.setText(e.getChoiceB());
-            if(e.getEffectB() == 0){
-                budEffect.setText("None");
-            } else {
-                budEffect.setText(String.format("%.0f", e.getEffectB())); //FIX
-            }
+            textEffect.setTextColor(Color.parseColor("#7cd175"));
+            textEffect.setText(String.format("%.0f", e.getEffectB()));
             choiceNumber = 0;
 
         //Stability
         } else if (choiceNumber == 3) {
             changeResources(e.getEffectS(), "Stability");
             choiceText.setText(e.getChoiceS());
-            if(e.getEffectS() == 0){
-                stabEffect.setText("None");
-            } else {
-                stabEffect.setText(String.format("%.2f", e.getEffectS())); //FIX
-            }
+            textEffect.setTextColor(Color.parseColor("#019acc"));
+            textEffect.setText(String.format("%.2f", e.getEffectS()));
             choiceNumber = 0;
 
         } else {
@@ -634,6 +625,7 @@ public class GameActivity extends AppCompatActivity {
         b.setMessage("End the game? You will be taken to the evaluation questionnaire?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
     }
 
+    //Go to finish screen
     public void endGame(){
         //Start Finish activity with win or loss
         Intent i = new Intent(GameActivity.this, FinishActivity.class);

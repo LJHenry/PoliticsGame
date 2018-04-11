@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * System will take game parameters and produce a suitable event.
  * Logs game situation and calculates situation score.
- * Will be manipulated by the AI.
+ * Gets prediction from AI to modify difficulty.
  * Created by Louis Henry.
  */
 
@@ -93,8 +93,12 @@ public class EventSystem {
         //Log game state
         String state = getResources() + "," + isNegative + "," + choice + "\n"; // " --" +  "PREDICTED: " + predictedChoice +
         log(state);
-        //Remember last situation
-        lastSituation = "";
+        //Use last situation
+        if(situations.isEmpty()) {
+            lastSituation = "";
+        } else {
+            lastSituation = situations.get(situations.size() -1);
+        }
     }
 
     //Get resources as string
@@ -117,27 +121,6 @@ public class EventSystem {
         return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
     }
 
-    //Write out game state to log - INTERNAL PRIVATE STORAGE
-    private void log(String state) {
-        FileOutputStream outputStream;
-        try {
-            outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
-            if (lastSituation == null) {
-                outputStream.write(("\nNEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
-            }
-            outputStream.write(state.getBytes());
-            outputStream.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Clear Log
-    private void deleteLog(){
-        c.deleteFile(logFilename);
-    }
-
     //Find event in pool
     public Event findEvent(String label, boolean random) {
         if (random) {
@@ -156,7 +139,7 @@ public class EventSystem {
                 modifyEffectBySituation(e, choice);
 
                 //DEBUG - Output
-                Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+                Toast toast2 = Toast.makeText(c, choice + " " +  getSituation(), Toast.LENGTH_SHORT);
                 toast2.show();
             }
             rememberEvent(e);
@@ -215,25 +198,6 @@ public class EventSystem {
         return e;
     }
 
-    //Get training event
-    public Event getTrainingEvent(){
-        //Get event
-        Event e = t.getTrainingEvent(getSituation(), negativeMultiplier);
-        //DEBUG - Output
-        Toast toast1 = Toast.makeText(c, getSituation(), Toast.LENGTH_SHORT);
-        toast1.show();
-        if(flagUseAi){
-            //Predict choice
-            String choice = getPrediction(approval, budget, stability, isNegative);
-            modifyEffectBySituation(e, choice);
-
-            //DEBUG - Output
-            Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
-            toast2.show();
-        }
-        return e;
-    }
-
     private String getSituation() {
         //Determine Situation Label
 
@@ -241,24 +205,24 @@ public class EventSystem {
         //Higher score = worse situation
         //Closer to election score is naturally higher
 
-        String label = "Critical"; //Only stays as this if score is over 60 = critical
+        String label = "Critical"; //Only stays as this if score is over 65 = critical
         double score = 0;
 
         score = calculateScore();
 
-        if (score <= 20) {
+        if (score <= 25) {
             //Low
             label = "Low";
-        } else if (score <= 30) {
+        } else if (score <= 35) {
             //Moderate
             label = "Moderate";
-        } else if (score <= 40) {
+        } else if (score <= 45) {
             //Substantial
             label = "Substantial";
-        } else if (score <= 50) {
+        } else if (score <= 55) {
             //Severe
             label = "Severe";
-        } else if (score <= 60) {
+        } else if (score <= 65) {
             //Critical
             label = "Critical";
         }
@@ -286,8 +250,6 @@ public class EventSystem {
             }
             score += 1;
         }
-
-        //Check 3 Resources for closeness to 0
 
         //Approval
         if (approval < 20) {
@@ -342,7 +304,6 @@ public class EventSystem {
                     break;
             }
         }
-
         return score;
     }
 
@@ -432,9 +393,9 @@ public class EventSystem {
         return p.label;
     }
 
-    //Modify the effect of the choice predicted by the classifier
+    //Modify the effect of the predicted choice based on situation
     private void modifyEffectBySituation(Event e, String choice){
-        //Set Positive/Negative modifier depending on resource
+        //Positive/Negative modifier
         double modifierP  = 0;
         double modifierN  = 0;
 
@@ -448,7 +409,7 @@ public class EventSystem {
                     modifierN = 1.35;
                     modifierP = 0.75;
                 } else if(choice == "3"){
-                    modifierN = -0.1;
+                    modifierN = 0.1;
                     modifierP = 0.01;
                 }
                 break;
@@ -460,7 +421,7 @@ public class EventSystem {
                     modifierN = 1.2;
                     modifierP = 0.85;
                 } else if(choice == "3"){
-                    modifierN = -0.07;
+                    modifierN = 0.07;
                     modifierP = 0.02;
                 }
                 break;
@@ -472,7 +433,7 @@ public class EventSystem {
                     modifierN = 1.1;
                     modifierP = 1.1;
                 } else if(choice == "3"){
-                    modifierN = -0.05;
+                    modifierN = 0.05;
                     modifierP = 0.05;
                 }
                 break;
@@ -484,7 +445,7 @@ public class EventSystem {
                     modifierN = 0.85;
                     modifierP = 1.2;
                 } else if(choice == "3"){
-                    modifierN = -0.02;
+                    modifierN = 0.02;
                     modifierP = 0.07;
                 }
                 break;
@@ -496,15 +457,20 @@ public class EventSystem {
                     modifierN = 0.75;
                     modifierP = 1.35;
                 } else if(choice == "3"){
-                    modifierN = -0.01;
+                    modifierN = 0.01;
                     modifierP = 0.1;
                 }
                 break;
         }
 
-        //Get predicted effect
+        //Get effect
         double effect = e.getEffectByLabel(choice);
-        //Apply modifier by multiplying
+        if(effect == 0){
+            //Don't modify Intro events
+            return;
+        }
+
+        //Apply modifier
         if(e.isNegative()){
             if(choice == "3"){
                 effect -= modifierN;
@@ -527,6 +493,46 @@ public class EventSystem {
         }
 
         e.setEffect(choice, effect);
+    }
+
+    //Write out game state to log - INTERNAL PRIVATE STORAGE
+    private void log(String state) {
+        FileOutputStream outputStream;
+        try {
+            outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
+            if (lastSituation == null) {
+                outputStream.write(("\nNEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
+            }
+            outputStream.write(state.getBytes());
+            outputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Clear Log
+    private void deleteLog(){
+        c.deleteFile(logFilename);
+    }
+
+    //Get training event
+    public Event getTrainingEvent(){
+        //Get event
+        Event e = t.getTrainingEvent(getSituation(), negativeMultiplier);
+        //DEBUG - Output
+        Toast toast1 = Toast.makeText(c, getSituation(), Toast.LENGTH_SHORT);
+        toast1.show();
+        if(flagUseAi){
+            //Predict choice
+            String choice = getPrediction(approval, budget, stability, isNegative);
+            modifyEffectBySituation(e, choice);
+
+            //DEBUG - Output
+            Toast toast2 = Toast.makeText(c, choice, Toast.LENGTH_SHORT);
+            toast2.show();
+        }
+        return e;
     }
 
 }
