@@ -24,6 +24,7 @@ public class EventSystem {
     private String countryName;
     private int govType;
     private String engagement;
+
     //Resources
     private double approval;
     private double budget;
@@ -31,6 +32,7 @@ public class EventSystem {
     private String approvalString;
     private String budgetString;
     private String stabilityString;
+
     //Game Situation
     private int day;
     private int year;
@@ -38,6 +40,7 @@ public class EventSystem {
     private String lastSituation;
     private double negativeMultiplier;
     private double score;
+
     //Event
     private int choice;
     private String isNegative;
@@ -45,9 +48,11 @@ public class EventSystem {
     //Event Memory (Difficulty Adjustment)
     private ArrayList<Event> events;
     private boolean positiveOverride;
+
     //Log File
     private String logFilename; //Device Android ID - unique and recommended secure ID method by Google
     private Context c;
+
     //AI
     private TrainingSuite t;
     private PositivePoliticsGameRandomForest rfPositive;
@@ -96,7 +101,7 @@ public class EventSystem {
         //Calculate situation
         //situation = getSituation();
         //Log game state
-        String state = getResources() + "," + calculateScore() + "," + tier + "," + choice + "," + isNegative + "\n"; // " --" +  "PREDICTED: " + predictedChoice +
+        String state = getResources() + "," + calculateScore() + "," + tier + "," + choice + " TYPE:" + isNegative +  " PREDICTED:" + predictedChoice + "\n";
         log(state);
         //Use last situation
         if(situations.isEmpty()) {
@@ -121,23 +126,6 @@ public class EventSystem {
         //return String.format("%.1f", a) + "," + String.format("%.1f", b) + "," + String.format("%.1f", s);
         //return getResourceNominal(a) + "," + getResourceNominal(b) + "," + getResourceNominal(s);
         return compareResources(a, b, s);
-    }
-
-    //Get resource value as a string low, below, average, above, high
-    private String getResourceNominal(double resource){
-        if(resource >= 45 && resource <= 55){
-            return "average";
-        } else if(resource >= 25 && resource <= 44){
-            return "below";
-        } else if(resource <= 24){
-            return "low";
-        } else if(resource >= 56 && resource <= 65){
-            return "above";
-        } else if(resource > 65){
-            return "high";
-        }
-
-        return "default";
     }
 
     //Work out high medium and low
@@ -257,8 +245,8 @@ public class EventSystem {
                 modifyEffect(e, choice);
 
                 //DEBUG - Output
-                Toast toast2 = Toast.makeText(c, choice + "| " +  getSituation(), Toast.LENGTH_SHORT);
-                toast2.show();
+                //Toast toast2 = Toast.makeText(c, choice + "| " +  getSituation(), Toast.LENGTH_SHORT);
+                //toast2.show();
             }
             rememberEvent(e);
             return e;
@@ -326,24 +314,24 @@ public class EventSystem {
         //Higher score = worse situation
         //Closer to election score is naturally higher
 
-        String label = "Critical"; //Only stays as this if score is over 40 = critical
+        String label = "Critical"; //Only stays as this if score is over 50 = critical
         double score = 0;
 
         score = calculateScore();
 
-        if (score <= 20) {
+        if (score <= 30) {
             //Low
             label = "Low";
-        } else if (score <= 30) {
+        } else if (score <= 35) {
             //Moderate
             label = "Moderate";
-        } else if (score <= 35) {
+        } else if (score <= 40) {
             //Substantial
             label = "Substantial";
-        } else if (score <= 40) {
+        } else if (score <= 45) {
             //Severe
             label = "Severe";
-        } else if (score <= 45) {
+        } else if (score <= 50) {
             //Critical
             label = "Critical";
         }

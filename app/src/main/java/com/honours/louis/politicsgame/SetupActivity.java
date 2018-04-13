@@ -97,7 +97,7 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
 
     //If item selected is changed
     @Override
-    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id){
+   public void onItemSelected(AdapterView<?> parent, View v, int pos, long id){
         //Provide description based on spinner selected item
         describe(spinnerHoriz, spinnerVert);
     }
@@ -156,39 +156,39 @@ public class SetupActivity extends AppCompatActivity implements AdapterView.OnIt
 
         //Compare strings and set description + bonuses
         if(horiz.equals("Centrist") && vert.equals("Moderate")){
-            t.setText("Moderate government with economic and social policies that only slightly sway towards a particular end of the spectrum. Aims to provide a correct amount of state involvement towards its people. Examples include Tony Blair's New Labour employing principles of the Third Way philosophy. ");
+            t.setText("Socially: Centrist. Economically: Centrist. Moderate government with economic and social policies that only slightly sway towards a particular end of the spectrum. Aims to provide a balanced amount of state towards its people. Generally most governments in practice will fall into this category even if they are built upon differing ideals.");
             bonuses[0] = 0; bonuses[1] = 0; bonuses[2] = 0; type = 1;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Centrist") && vert.equals("Authoritarian")) {
-            t.setText("A government that does not fall particularly to the left or right economically but employs authoritarian social policy. It is rare that such a government will exist however Singapore's governance is an example of this. While the country has an excellent economy, civil liberties are reduced.");
+            t.setText("Socially: Authoritative. Economically: Centrist. A government that does not fall particularly to the left or right economically but employs authoritarian social policy. A rare type of government. Examples: Singapore");
             bonuses[0] = -1; bonuses[1] = 0; bonuses[2] = 1; type = 2;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Centrist") && vert.equals("Libertarian")) {
-            t.setText("A common socially liberal centrist government. In the UK the Liberal Democrats ideology occupies this area of the spectrum, with their cohorts of 'social liberals' and 'Orange Bookers' the party tends not to sway too far left or right.");
+            t.setText("Socially: Liberal. Economically: Centrist. A common socially liberal centrist government. Tend to occupy a position to the left and right of centre. Examples: The Liberal Democrats(UK)");
             bonuses[0] = 1; bonuses[1] = -1; bonuses[2] = 0; type = 3;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Collectivist") && vert.equals("Moderate")) {
-            t.setText("Traditional centre-left government, social democrats and democratic socialists. Generally employs the belief that a country should be run with social intervention or ownership to ensure its citizens have equal opportunity. Britain's Labour Party is the ideological epitome of this.");
+            t.setText("Socially: Centrist. Economically: Collectivist. Traditional centre-left government, social democrats and democratic socialists. Generally employs the belief that a country should be run with social intervention or ownership to ensure its citizens have equal opportunity. Examples: Labour Party (UK) ");
             bonuses[0] = 0; bonuses[1] = -1; bonuses[2] = 1; type = 4;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Collectivist") && vert.equals("Authoritarian")){
-            t.setText("State communism. Means of production owned by the state with a central planned economy. Imposes rules such that a class based society should not exist. Generally the governments rules are imposed harshly, only 1 political party may exist and religion is banned. The Soviet Union was the primary adherent of this methodology.");
+            t.setText("Socially: Authoritative. Economically: Collectivist. Communism. Means of production owned by the state with a central planned economy. Imposes rules such that a class based society should not exist. Examples: The Soviet Union");
             bonuses[0] = -2; bonuses[1] = 0; bonuses[2] = 2; type = 5;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Collectivist") && vert.equals("Libertarian")){
-            t.setText("Liberal Socialism. Supportive of the people and opposed to the state. Ideologically the power of the country is held by the people who will reject authority and voluntarily organise social structure. This should result in common ownership of the means of production as opposed to individual private ownership. There are no such examples of a country using this idea, ");
+            t.setText("Socially: Liberal. Economically: Collectivist. Liberal Socialism. Supportive of the people and opposed to the state. Ideologically the power of the country is held by the people who will voluntarily organise social structure. Advocate common ownership of the means of production as opposed to individual private ownership. As of yet there are no examples of a government that has truly implemented this, likely owing to the nature of its ideals.");
             bonuses[0] = 2; bonuses[1] = -2; bonuses[2] = 0; type = 6;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Individualist") && vert.equals("Moderate")){
-            t.setText("Traditional centre-right government. Supportive of capitalism as the system that drives the country, with a focus on the rights of the individual. Ideologies in this area are usually balanced between social conservatism and progress. The Conservative party in the UK falls within this category.");
+            t.setText("Socially: Centrist. Economically: Individualist. Traditional centre-right government. Supportive of capitalism as the system that drives the country, with a focus on the rights of the individual. Usually balanced between social conservatism and progress. Examples: The Conservative Party(UK), The Republican Party(US), The Democratic Party(US)");
             bonuses[0] = -1; bonuses[1] = 1; bonuses[2] = 0; type = 7;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Individualist") && vert.equals("Authoritarian")){
-            t.setText("An authoritative government following right wing ideology, generally imposes a hierarchy on society based on the inequalities between individuals. Strong adherence to authority gives rise to traditionalism and therefore social behaviours are dictated by institutions tied to the state (e.g. Religious). Generally, nationalistic, xenophobic and elitist policies are enacted. Examples are Nazism and Facism.");
+            t.setText("Socially: Authoritative. Economically: Individualist. An authoritative government following right wing ideology, generally imposes a hierarchy on society based on the inequalities between individuals. Strong adherence to authority gives rise to traditionalism and therefore social behaviours are dictated by institutions tied to the state (e.g. Religious). Generally nationalistic. Examples: World War 2 Fascism(Spain, Italy), Nazism");
             bonuses[0] = -2; bonuses[1] = 1; bonuses[2] = 1; type = 8;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else if (horiz.equals("Individualist") && vert.equals("Libertarian")) {
-            t.setText("Classic liberalism. Holding the belief that the rights of the individual are tantamount to freedom. Maintains the Non-Aggression Principle which dictates that any force exerted on an individual (i.e. the state) to do something is coercion which directly violates freedom. For this reason, economically individualist ideas are preferred as collectivism is seen as a violation of the NAP. As of yet there are no examples of a government that has truly utilised this, likely owing to the nature of its ideals.");
+            t.setText("Socially: Liberal. Economically: Individualist. Classic liberalism. Holding the belief that the rights of the individual are tantamount to freedom. As of yet there are no examples of a government that has truly implemented this, likely owing to the nature of its ideals.");
             bonuses[0] = 1; bonuses[1] = 1; bonuses[2] = -2; type = 9;
             b1.setText(String.valueOf(bonuses[0])); b2.setText(String.valueOf(bonuses[1])); b3.setText(String.valueOf(bonuses[2]));
         } else {
