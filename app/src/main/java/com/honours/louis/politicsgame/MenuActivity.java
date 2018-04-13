@@ -50,7 +50,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 };
                 //Show dialog
                 AlertDialog.Builder b = new AlertDialog.Builder(this);
-                b.setMessage("By continuing to use this application, you consent to send anonymous gameplay and evaluation data to a server for the purpose of academic research. If you require more information please consult the project information page from the main menu.").setNeutralButton("Okay", dialogClickListener).show();
+                b.setMessage("Please ensure you are connected to the internet while playing this game. By continuing to use this application, you consent to send anonymous gameplay and evaluation data to a server for the purpose of academic research. If you require more information please consult the project information page from the main menu.").setNeutralButton("Okay", dialogClickListener).show();
                 break;
             case R.id.buttonHelp:
                 //Game Help Page

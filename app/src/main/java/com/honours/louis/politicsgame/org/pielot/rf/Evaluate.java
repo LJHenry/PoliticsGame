@@ -176,13 +176,15 @@ public class Evaluate {
 	 * @param args unused
 	 */
 	public static void main(String[] args) throws Exception {
-		RandomForest rf = new PoliticsGameRandomForest();
+		RandomForest rfP = new PositivePoliticsGameRandomForest();
+		RandomForest rfN = new NegativePoliticsGameRandomForest();
 
 		File testData = new File("data/politicsgame.csv");
 		boolean exists = testData.exists();
 		System.out.println(testData.getAbsolutePath() + ", exists == " + exists);
 
-		evalClassifier(rf, testData);
+		evalClassifier(rfP, testData);
+		evalClassifier(rfN, testData);
 	}
 
 }

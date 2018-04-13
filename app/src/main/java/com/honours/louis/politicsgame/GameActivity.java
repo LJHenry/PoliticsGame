@@ -181,27 +181,46 @@ public class GameActivity extends AppCompatActivity {
         }.start();
     }
 
-    //Conditions for Winning the election -- NEEDS ADJUSTED
+    //Conditions for Winning the election
     private boolean elected(){
         //Use score to calculate
-        if(getScore() >= 3){
+        if(getScore() >= 4){
             return true;
         }
         return false;
     }
 
     //Get score based on resources
-    private int getScore(){
-        int score = 0;
-        if(approval >= 40){
-            score += 1;
+    private double getScore(){
+        double score = 0;
+
+        //Approval
+        if(approval <= 35){
+            score += 0;
+        } else if(approval >= 35 && approval <= 45){
+            score += 1.5;
+        } else if(approval > 45){
+            score+= 2;
         }
-        if(budget >= 20000){
-            score += 1;
+
+        //Budget
+        if(budget < 15000){
+            score += 0;
+        } else if(budget >= 15000 && budget <= 35000){
+            score += 1.5;
+        } else if(budget > 35000){
+            score += 2;
         }
-        if(stability >= 2){
-            score += 1;
+
+        //Stability
+        if(stability < 1.75){
+            score += 0;
+        } else if(stability >= 1.75 && stability <= 2.5){
+            score += 1.5;
+        } else if(stability > 2.5) {
+            score += 2;
         }
+
         return score;
     }
 
@@ -482,7 +501,7 @@ public class GameActivity extends AppCompatActivity {
             double bud = e.getEffectB();
             if (bud < 0){
                 bud = Math.abs(bud);
-                c2Bud.setText("- £" + String.format("%.0f", bud));
+                c2Bud.setText("-£" + String.format("%.0f", bud));
             } else {
                 c2Bud.setText("£" + String.format("%.0f", e.getEffectB()));
             }
@@ -505,7 +524,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 1;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });
@@ -516,7 +535,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 2;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });
@@ -527,7 +546,7 @@ public class GameActivity extends AppCompatActivity {
                 choiceNumber = 3;
                 paused = false;
                 eventDialog.dismiss();
-                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative());
+                eventSystem.getGameState(approval, budget, stability, choiceNumber, e.isNegative(), e.getTierAsString());
                 getChoice(e);
             }
         });

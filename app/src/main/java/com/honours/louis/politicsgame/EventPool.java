@@ -62,7 +62,7 @@ public class EventPool {
         //Intro
         poolA.add(makeEvent("GameStart", "Welcome", "Ok", 0,"To", "Ok", 0, "Politics Game", "Ok",0, false,0));
         poolA.add(makeEvent("Example", "Events", "You Must", 0, "Appear", "Make", 0,"Here", "A Choice",0, false,0));
-        poolA.add(makeEvent("Resources", "Balance", "Approval", 0, "Your", "Budget", 0, "Resources", "Stability",0, false,0));
+        poolA.add(makeEvent("Resources", "Manage", "Approval /100", 0, "Your", "Budget /100,000", 0, "Resources", "Stability /5",0, false,0));
         //Election
         poolA.add(makeEvent("ElectionWarning", "General Election", "Make a Speech", 5, "To Be Held", "Hold Fundraiser", 2500, "Soon", "Organise Party", 0.1, false,1));
         poolA.add(makeEvent("BeginCampaign", "The Government", "Focus on People", 7, "Begin", "Focus on Economy", 5000, "Their Election Campaign", "Focus on Parliament",0.2, false,2));
@@ -160,6 +160,10 @@ public class EventPool {
 
         Event e = new Event();
         int tier;
+
+        //Situation modifier
+        int tierModifier = situationModifier(situation);
+
         //Determine positive or negative
         boolean negative;
         if(positiveOverride){
@@ -169,7 +173,7 @@ public class EventPool {
         }
 
         //Determine Tier
-        tier = getTier();
+        tier = getTier(tierModifier);
 
         int i;
 
@@ -312,32 +316,32 @@ public class EventPool {
 
     //Chance for negative events based on Situation
     private boolean negativeChance(String situation, double multiplier){
-        double i = new Random().nextInt(20) + 1;
+        double i = new Random().nextInt(25) + 1;
         //Higher the number more likely to be negative
         i = i * multiplier;
         switch(situation) {
             case "Low":
-                if(i >= 11){
-                    return true;
-                }
-                break;
-            case "Moderate":
-                if(i >= 10){
-                    return true;
-                }
-                break;
-            case "Substantial":
-                if(i >= 9){
-                    return true;
-                }
-                break;
-            case "Severe":
                 if(i >= 8){
                     return true;
                 }
                 break;
+            case "Moderate":
+                if(i >= 8){
+                    return true;
+                }
+                break;
+            case "Substantial":
+                if(i >= 10){
+                    return true;
+                }
+                break;
+            case "Severe":
+                if(i >= 12){
+                    return true;
+                }
+                break;
             case "Critical":
-                if(i >= 7){
+                if(i >= 14){
                     return true;
                 }
                 break;
@@ -346,9 +350,11 @@ public class EventPool {
     }
 
     //Random event tier
-    private int getTier(){
+    private int getTier(int modifier){
         //% Chance to have event from each Tier
         int i = new Random().nextInt(100) + 1;
+
+        i += modifier;
 
         if(i < 30){
             //Tier 1
@@ -367,6 +373,31 @@ public class EventPool {
             return 5;
         }
     }
+
+    //Tier by situation
+    private int situationModifier(String situation){
+        int i = 0;
+
+        switch (situation){
+            case "Low":
+                i += 0;
+                break;
+            case "Moderate":
+                i += 5;
+                break;
+            case "Substantial":
+                i += 10;
+                break;
+            case "Severe":
+                i += 15;
+                break;
+            case "Critical":
+                i += 20;
+                break;
+        }
+        return i;
+    }
+
 
 }
 
