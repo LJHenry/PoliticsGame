@@ -11,12 +11,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.Random;
+
+/**
+ * The game. Runs a loop wrapped in a count down timer. Loop interrupted
+ * when game end is met or loss conditions met.
+ * Created by Louis Henry.
+ */
 
 public class GameActivity extends AppCompatActivity {
 

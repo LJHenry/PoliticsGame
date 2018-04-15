@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+/**
+ * Main Menu.
+ * Created by Louis Henry on 06/02/2018.
+ */
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,7 +54,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 };
                 //Show dialog
                 AlertDialog.Builder b = new AlertDialog.Builder(this);
-                b.setMessage("Please ensure you are connected to the internet while playing this game. By continuing to use this application, you consent to send anonymous gameplay and evaluation data to a server for the purpose of academic research. If you require more information please consult the project information page from the main menu.").setNeutralButton("Okay", dialogClickListener).show();
+                b.setMessage("Please ensure you are connected to the internet while playing this game. By continuing to use this application, you consent to send anonymous gameplay and evaluation data (including age) to a server for the purpose of academic research. This data will not be shared. If you require more information please consult the project information page from the main menu.").setNeutralButton("Okay", dialogClickListener).show();
                 break;
             case R.id.buttonHelp:
                 //Game Help Page

@@ -3,7 +3,7 @@ package com.honours.louis.politicsgame;
 /**
  * An element that makes up an event, one of three.
  * Must be a Object, Context or Subject.
- * Created by loujh on 12/02/2018.
+ * Created by Louis Henry on 06/02/2018.
  */
 
 public class EventElement {

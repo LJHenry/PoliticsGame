@@ -13,6 +13,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Sets up game. User enters a country name and selects government type.
+ * Created by Louis Henry.
+ */
+
 public class SetupActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     //Name text box

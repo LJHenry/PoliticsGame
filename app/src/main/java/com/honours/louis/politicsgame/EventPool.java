@@ -1,9 +1,12 @@
 package com.honours.louis.politicsgame;
 
-import com.honours.louis.politicsgame.org.pielot.rf.RandomForest;
-
 import java.util.ArrayList;
 import java.util.Random;
+
+/**
+ * Class that handles creation and holding of all events in the game.
+ * Created by Louis Henry.
+ */
 
 public class EventPool {
 

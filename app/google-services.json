@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1002162669119",
+    "firebase_url": "https://politicsgame-2a83a.firebaseio.com",
+    "project_id": "politicsgame-2a83a",
+    "storage_bucket": "politicsgame-2a83a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002162669119:android:8231e487c9f1ee80",
+        "android_client_info": {
+          "package_name": "com.honours.louis.politicsgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002162669119-mo611illlm4fdg5ho4pibaqsdk0p3fgl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL7QNT_X4BzAipO82Gs90Z3V5v2cjQ6Qc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

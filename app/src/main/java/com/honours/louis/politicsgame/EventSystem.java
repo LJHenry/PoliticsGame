@@ -1,9 +1,9 @@
 package com.honours.louis.politicsgame;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.honours.louis.politicsgame.org.pielot.rf.NegativePoliticsGameRandomForest;
 import com.honours.louis.politicsgame.org.pielot.rf.PositivePoliticsGameRandomForest;
 import com.honours.louis.politicsgame.org.pielot.rf.Prediction;
@@ -50,7 +50,7 @@ public class EventSystem {
     private boolean positiveOverride;
 
     //Log File
-    private String logFilename; //Device Android ID - unique and recommended secure ID method by Google
+    private String logFilename; //Android ID but scrambled so the device can not be directly identified
     private Context c;
 
     //AI
@@ -71,7 +71,7 @@ public class EventSystem {
         negativeMultiplier = 0;
         score = 0;
         //Name of log file
-        logFilename = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
+        logFilename = FirebaseInstanceId.getInstance().getId() + "-Log"; //Uses New Firebase messaging service from google to get unique app instance ID for identifying a users installation
         //Initialise events
         pool = new EventPool();
         events = new ArrayList<>();
@@ -101,7 +101,7 @@ public class EventSystem {
         //Calculate situation
         //situation = getSituation();
         //Log game state
-        String state = getResources() + "," + calculateScore() + "," + tier + "," + choice + " TYPE:" + isNegative +  " PREDICTED:" + predictedChoice + "\n";
+        String state = getResources() + "," + calculateScore() + "," + tier + "," + choice + " TYPE:" + isNegative +  " PREDICTED:" + predictedChoice + "." + "\n";
         log(state);
         //Use last situation
         if(situations.isEmpty()) {
@@ -590,31 +590,31 @@ public class EventSystem {
         switch (getSituation()){
             case "Low":                         //Greatly reduce positive effects, greatly increase negatives
                 if(choice == "1"){
-                    if(neg){ return 1.75;}
+                    if(neg){ return 1.85;}
                     else { return 0.50;}
                 } else if(choice == "2"){
                     if(neg){ return 1.50;}
                     else { return 0.75;}
                 } else if(choice == "3"){
                     if(neg){ return 0.15;}
-                    else { return -0.05;}
+                    else { return -0.07;}
                 }
                 break;
             case "Moderate":                    //Reduce positive effects, increase negatives
                 if(choice == "1"){
-                    if(neg){ return 1.50;}
+                    if(neg){ return 1.60;}
                     else { return 0.75;}
                 } else if(choice == "2"){
                     if(neg){ return 1.25;}
                     else { return 0.85;}
                 } else if(choice == "3"){
                     if(neg){ return 0.07;}
-                    else { return -0.02;}
+                    else { return -0.05;}
                 }
                 break;
             case "Substantial":                 //Boost both effects, at mercy of RNG as to which way it goes
                 if(choice == "1"){
-                    if(neg){ return 1.25;}
+                    if(neg){ return 1.35;}
                     else { return 1.05;}
                 } else if(choice == "2"){
                     if(neg){ return 1.15;}
@@ -630,7 +630,7 @@ public class EventSystem {
                     else { return 1.15;}
                 } else if(choice == "2"){
                     if(neg){ return 0.85;}
-                    else { return 1.2;}
+                    else { return 1.1;}
                 } else if(choice == "3"){
                     if(neg){ return 0.02;}
                     else { return 0.02;}
@@ -658,7 +658,7 @@ public class EventSystem {
         try {
             outputStream = c.openFileOutput(logFilename, Context.MODE_APPEND);
             if (lastSituation == null) {
-                outputStream.write(("\nNEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "\n").getBytes());
+                outputStream.write(("\nNEW GAME - Name:" + countryName + " Type:" + String.valueOf(govType) + " Engagement:" + engagement + "." + "\n").getBytes());
             }
             outputStream.write(state.getBytes());
             outputStream.close();
@@ -666,11 +666,6 @@ public class EventSystem {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    //Clear Log
-    private void deleteLog(){
-        c.deleteFile(logFilename);
     }
 
     //Get training event

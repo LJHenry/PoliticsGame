@@ -3,25 +3,35 @@ package com.honours.louis.politicsgame;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-
-import java.io.File;
+import com.google.firebase.iid.FirebaseInstanceId;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Questionnaire, sends the data to the server from log.
+ * Created by Louis Henry.
+ */
 
 public class QActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,8 +50,9 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
     String answer4;
     String answer5;
 
-    //Name of log file
+    //Log file
     String logFilename;
+    String logContent;
 
     private boolean winOrLoss;
 
@@ -73,7 +84,7 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         //Win Loss
         winOrLoss = getIntent().getBooleanExtra("WinLoss", false);
 
-        logFilename = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID) + "_Log";
+        logFilename = FirebaseInstanceId.getInstance().getId() + "-Log";
     }
 
     //Send data to server then return to menu
@@ -89,8 +100,10 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Log answers
                                 log(getAnswers());
+                                //Get log content
+                                logContent = getLog(getApplicationContext(), logFilename);
                                 //Send game data to server
-                                new SendToServer().execute(logFilename);
+                                new SendToServer().execute(logFilename, logContent);
                                 //Return to main menu
 
                                 break;
@@ -150,7 +163,28 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
             w = "Loss";
         }
 
-        return "Game:" + w + " Evaluation Answers --- Q1:" + String.valueOf(answer1) + " Q2:" + String.valueOf(answer2) + " Q3:" + answer3 + " Q4:" + answer4 + " Q5:" + answer5 + "\n";
+        return "Game:" + w + " Evaluation Answers --- Q1:" + String.valueOf(answer1) + " Q2:" + String.valueOf(answer2) + " Q3:" + answer3 + " Q4:" + answer4 + " Q5:" + answer5 + "." + "\n";
+    }
+
+    //Get the log file as string
+    public String getLog(Context context, String filename) {
+        try {
+            FileInputStream fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            return "";
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     //Write out answers to log - INTERNAL PRIVATE STORAGE
@@ -166,8 +200,16 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    //Clear Log
+    private void deleteLog(){
+        getApplicationContext().deleteFile(logFilename);
+    }
+
     //Finish the activity once the data is sent
     private void finishAfterSend(){
+        //Delete log file
+        deleteLog();
+        //Finish
         this.finish();
     }
 
@@ -184,34 +226,46 @@ public class QActivity extends AppCompatActivity implements View.OnClickListener
             progress.show();
         }
 
-
-        //Uploads to Hostinger file server via FTP
-        //Apache Commons Net Jar provides FTP Client functionality
+        //Uploads to Hostinger database
         protected String doInBackground(String... params) {
-
-            String filename = params[0];
-            FTPClient con;
-
+            HttpURLConnection con;
             try {
-                con = new FTPClient();
-                con.connect("ftp.politicsgame.xyz");
+                //URL
+                String s = "http://www.politicsgame.xyz/upload.php";
+                URL url = new URL(s);
+                //Connection
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                //Timeout
+                con.setReadTimeout(20000);
+                con.setConnectTimeout(20000);
+                //Input
+                con.setDoInput(true);
+                con.setDoOutput(true);
 
-                if (con.login("u279076413", "uQhL9lfZ8kL6JV")) {
-                    con.enterLocalPassiveMode(); // Important!
-                    con.setFileType(FTP.BINARY_FILE_TYPE);
-                    File data = new File("data/data/com.honours.louis.politicsgame/files/" + filename);
-                    FileInputStream in = new FileInputStream(data);
-                    boolean result = con.storeFile(filename, in);
-                    in.close();
-                    if (result) Log.v("Log File Upload", "Success");
-                    con.logout();
-                    con.disconnect();
-                    return "Success";
-                }
+                //Parameters - encoding applied
+                Uri.Builder builder = new Uri.Builder().appendQueryParameter("user", logFilename).appendQueryParameter("log", logContent);
+                String query = builder.build().getEncodedQuery();
+
+                //Write log details to server, upload.php
+                OutputStream os = con.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                System.out.println("SERVER RESPONSE: " + con.getResponseCode());
+
+                //Connect
+                con.connect();
             } catch (Exception e) {
-                e.printStackTrace();
+                //Nothing
+                System.out.println("SEND TO SERVER ERROR: " + e.getMessage());
             }
-            return "Failure";
+
+            return "Done";
         }
 
         @Override

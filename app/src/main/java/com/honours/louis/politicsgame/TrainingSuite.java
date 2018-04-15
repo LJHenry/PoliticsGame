@@ -4,6 +4,11 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Used to create training events to get initial model data.
+ * Created by Louis Henry.
+ */
+
 public class TrainingSuite {
 
     public Event getTrainingEvent(String situation, double negativeMultiplyer) {
@@ -206,74 +211,4 @@ public class TrainingSuite {
         return false;
     }
 
-
-    /*
-    //Ensure there is at least 1 positive or Negative effect in each choice
-    private double[] makeSense(double[] effects, int choice) {
-        int posCount = 0;
-        int index;
-        boolean zero = false;
-        int zeroIndex = -1;
-
-        if (isEmpty(effects)) {
-            effects = makeSense(getEffects(choice), choice);
-        }
-
-        //Iterate
-        for (int i = 0; i < 3; i++) {
-            if (effects[i] > 0) {
-                //Count Positives
-                posCount++;
-            } else if (effects[i] == 0) {
-                //Account for 0
-                zero = true;
-                zeroIndex = i;
-            }
-        }
-
-        if (posCount == 3) { //3 Positives
-            //Make 1 random index negative
-            effects[index = new Random().nextInt(2)] = -effects[index] * difficulty;
-        } else if (posCount == 0) { //3 Negatives
-            //Make 1 random index positive
-            effects[index = new Random().nextInt(2)] = Math.abs(effects[index]) / difficulty;
-        }
-
-        if (zero && posCount == 2) { //2 Positives Only
-            //Make 1 non zero index negative
-            index = randomIndex(zeroIndex);
-            effects[index] = -effects[index] * difficulty;
-
-        } else if (zero && posCount == 0) { //2 Negatives Only
-            //Make 1 non zero index positive
-            index = randomIndex(zeroIndex);
-            effects[index] = Math.abs(effects[index]) / difficulty;
-        }
-
-        return effects;
-    }
-
-    private int randomIndex(int exclude) {
-        int i = ThreadLocalRandom.current().nextInt(0, 2);
-        if (i == exclude)
-            i = randomIndex(exclude);
-        return i;
-    }
-
-    //Ensure the effects of a choice are not empty
-    private boolean isEmpty(double[] effects) {
-        int zeroCount = 0;
-
-        for (int i = 0; i < 3; i++) {
-            if (effects[i] == 0) {
-                zeroCount++;
-            }
-        }
-
-        if (zeroCount == 2 | zeroCount == 3) {
-            return true;
-        }
-        return false;
-    }
-    */
 }

@@ -7,8 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+/**
+ * Activity to show the user if they won or lost.
+ * Created by Louis Henry.
+ */
 
 public class FinishActivity extends AppCompatActivity implements View.OnClickListener {
 

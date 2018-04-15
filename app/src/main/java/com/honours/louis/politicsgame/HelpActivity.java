@@ -3,6 +3,11 @@ package com.honours.louis.politicsgame;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Gameplay Help.
+ * Created by Louis Henry.
+ */
+
 public class HelpActivity extends AppCompatActivity {
 
     @Override

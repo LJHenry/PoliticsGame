@@ -1,8 +1,12 @@
-
-
 package com.honours.louis.politicsgame.org.pielot.rf;
 
 import java.util.List;
+
+/**
+ * Random Forest model for Negative game Events.
+ * Generated from WEKA output using python, script provided under MIT Licence by Martin Pielot.
+ * https://github.com/mpielot/androidrf
+ */
 
 public class NegativePoliticsGameRandomForest extends RandomForest {
 
